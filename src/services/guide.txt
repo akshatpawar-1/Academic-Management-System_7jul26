@@ -1,0 +1,20 @@
+Purpose: Backend communication.
+
+Instead of writing:
+axios.get(...)
+inside every page,
+we'll write it once here.
+
+Example:
+
+studentService.js
+
+Later:
+
+addStudent()
+
+deleteStudent()
+
+updateStudent()
+
+This keeps pages clean.

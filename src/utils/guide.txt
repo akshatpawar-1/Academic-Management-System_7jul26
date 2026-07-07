@@ -1,0 +1,15 @@
+Purpose: Pure JavaScript helper functions.
+
+Examples:
+
+calculatePercentage()
+
+calculateGrade()
+
+validateMarks()
+
+No React.
+
+No HTML.
+
+Only logic.

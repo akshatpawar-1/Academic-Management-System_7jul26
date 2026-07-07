@@ -1,0 +1,12 @@
+Purpose: Every route (URL) of the application.
+
+Examples:
+
+/
+/login
+/students
+/marks
+
+Think:
+
+One page = one screen.

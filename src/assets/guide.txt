@@ -1,0 +1,13 @@
+Purpose: Stores static files.
+
+Examples:
+
+Images
+Icons
+Logos
+
+Future scope:
+
+College logo
+Student default profile image
+Dashboard icons

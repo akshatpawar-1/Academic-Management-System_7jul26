@@ -1,0 +1,13 @@
+Purpose: Reusable UI pieces.
+
+Examples:
+
+Navbar
+Student Table
+Student Form
+Loader
+
+Think:
+
+"Can this UI be reused somewhere else?"
+If yes → component.
