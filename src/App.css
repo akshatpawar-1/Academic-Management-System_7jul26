@@ -54,3 +54,31 @@ h4{
 .navbar a:hover{
     color:#2563eb;
 }
+
+.page h2{
+    margin-top:10px;
+    color:#334155;
+}
+
+.page p{
+    margin-top:20px;
+    color:#64748b;
+    font-size:18px;
+}
+
+.page .btn{
+    display:inline-block;
+    margin-top:30px;
+    padding:12px 24px;
+
+    background:#0f172a;
+    color:white;
+
+    text-decoration:none;
+    border-radius:8px;
+    transition:.3s;
+}
+
+.page .btn:hover{
+    background:#1e293b;
+}

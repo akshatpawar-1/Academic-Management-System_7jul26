@@ -10,6 +10,7 @@ import Students from "./pages/Students";
 import Marks from "./pages/Marks";
 import Reports from "./pages/Reports";
 import Profile from "./pages/Profile";
+import NotFound from "./pages/NotFound";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import GuestRoute from "./components/GuestRoute";
@@ -79,7 +80,7 @@ function App() {
                     }
                 />
 
-                <Route path="*" element={<Home />} />
+                <Route path="*" element={<NotFound />} />
 
             </Routes>
 
