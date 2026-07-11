@@ -1,5 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ROUTES } from "./utils/constants";
 
 import NavBar from "./components/NavBar";
 
@@ -24,10 +25,10 @@ function App() {
 
             <Routes>
 
-                <Route path="/" element={<Home />} />
+                <Route path={ROUTES.HOME} element={<Home />} />
 
                 <Route
-                    path="/login"
+                    path={ROUTES.LOGIN}
                     element={
                         <GuestRoute>
                             <Login />
@@ -36,7 +37,7 @@ function App() {
                 />
 
                 <Route
-                    path="/dashboard"
+                    path={ROUTES.DASHBOARD}
                     element={
                         <ProtectedRoute>
                             <Dashboard />
@@ -45,7 +46,7 @@ function App() {
                 />
 
                 <Route
-                    path="/students"
+                    path={ROUTES.STUDENTS}
                     element={
                         <ProtectedRoute>
                             <Students />
@@ -54,7 +55,7 @@ function App() {
                 />
 
                 <Route
-                    path="/marks"
+                    path={ROUTES.MARKS}
                     element={
                         <ProtectedRoute>
                             <Marks />
@@ -63,7 +64,7 @@ function App() {
                 />
 
                 <Route
-                    path="/reports"
+                    path={ROUTES.REPORTS}
                     element={
                         <ProtectedRoute>
                             <Reports />
@@ -72,7 +73,7 @@ function App() {
                 />
 
                 <Route
-                    path="/profile"
+                    path={ROUTES.PROFILE}
                     element={
                         <ProtectedRoute>
                             <Profile />
