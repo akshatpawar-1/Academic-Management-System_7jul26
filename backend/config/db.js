@@ -13,8 +13,8 @@ con.connect((err) => {
 
     if (err) {
 
-        console.log("Database Connection Failed");
-        console.log(err.message);
+        console.error("Database Connection Failed");
+        console.error(err.message);
 
     }
     else {

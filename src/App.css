@@ -82,3 +82,53 @@ h4{
 .page .btn:hover{
     background:#1e293b;
 }
+
+/* Login */
+
+.page form{
+    width:350px;
+    margin:40px auto;
+    padding:30px;
+
+    background:white;
+
+    border-radius:10px;
+
+    box-shadow:0 0 10px rgba(0,0,0,0.15);
+}
+
+.page input{
+    width:100%;
+    padding:12px;
+
+    border:1px solid #cbd5e1;
+    border-radius:6px;
+
+    font-size:16px;
+
+    outline:none;
+}
+
+.page input:focus{
+    border:1px solid #2563eb;
+}
+
+.page button{
+    width:100%;
+    padding:12px;
+
+    background:#0f172a;
+    color:white;
+
+    border:none;
+    border-radius:6px;
+
+    font-size:17px;
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.page button:hover{
+    background:#2563eb;
+}

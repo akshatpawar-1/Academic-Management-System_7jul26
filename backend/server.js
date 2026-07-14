@@ -1,23 +1,42 @@
 const express = require("express");
 const cors = require("cors");
 
-const con = require("./config/db");
+const session = require("express-session");
+
+require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const sessionRoutes = require("./routes/sessionRoutes");
 
 const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+
+    origin: "http://localhost:3000",
+
+    credentials: true
+
+}));
+
+app.use(session({
+
+    secret: "academic_management_system",
+
+    resave: false,
+
+    saveUninitialized: false,
+
+    cookie: {
+
+        maxAge: 1000 * 60 * 60
+
+    }
+
+}));
 
 app.use("/auth", authRoutes);
-
-// Test Route
-app.get("/", (req, res) => {
-
-    res.send("Academic Management System Backend Running");
-
-});
+app.use("/session", sessionRoutes);
 
 // Start Server
 app.listen(5000, () => {
