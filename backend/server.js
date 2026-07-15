@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
@@ -21,7 +22,7 @@ app.use(cors({
 
 app.use(session({
 
-    secret: "academic_management_system",
+    secret: process.env.SESSION_SECRET,
 
     resave: false,
 
@@ -39,7 +40,7 @@ app.use("/auth", authRoutes);
 app.use("/session", sessionRoutes);
 
 // Start Server
-app.listen(5000, () => {
+app.listen(process.env.PORT, () => {
 
     console.log("Server running on port 5000");
 
