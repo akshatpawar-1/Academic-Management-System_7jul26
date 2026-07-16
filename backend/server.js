@@ -7,6 +7,7 @@ const session = require("express-session");
 require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const sessionRoutes = require("./routes/sessionRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use(session({
 
 app.use("/auth", authRoutes);
 app.use("/session", sessionRoutes);
+app.use("/admins", adminRoutes);
 
 // Start Server
 app.listen(process.env.PORT, () => {

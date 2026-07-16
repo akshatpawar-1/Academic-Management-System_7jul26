@@ -4,131 +4,172 @@
     box-sizing:border-box;
     font-family:Arial,sans-serif;
 }
-
 body{
     background:#f8fafc;
 }
-
-.page{
-    padding-top:90px;
-    text-align:center;
-}
-
-.page h1{
-    color:#0f172a;
-    font-size:30px;
-}
-
-h4{
-	color:gray;
-}
-
+/* ---------- Navbar ---------- */
 .navbar{
     position:fixed;
     top:0;
     left:0;
     width:100%;
-
     background:#0f172a;
-
     display:flex;
     justify-content:center;
     align-items:center;
     gap:40px;
-
     padding:20px;
     border-bottom:4px solid #fbbf24;
-
-    box-shadow:0 4px 10px rgba(0,0,0,0.15);
-
+    box-shadow:0 4px 10px rgba(0,0,0,.15);
     z-index:1000;
 }
-
 .navbar a{
     text-decoration:none;
     color:white;
     font-size:18px;
     transition:.3s;
 }
-
 .navbar a:hover{
     color:#2563eb;
 }
-
-.page h2{
-    margin-top:10px;
-    color:#334155;
+/* ---------- Page ---------- */
+.page{
+    padding-top:100px;
+    padding-bottom:60px;
+    text-align:center;
 }
-
+.page h1{
+    color:#0f172a;
+    font-size:30px;
+    margin-bottom:20px;
+}
+.page h2{
+    margin:30px 0 20px;
+    color:#0f172a;
+}
 .page p{
     margin-top:20px;
     color:#64748b;
     font-size:18px;
 }
-
+h4{
+    color:gray;
+}
+/* ---------- Form ---------- */
+.page form{
+    width:380px;
+    margin:35px auto;
+    padding:30px;
+    background:white;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+.page input{
+    width:100%;
+    padding:13px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    font-size:17px;
+    outline:none;
+}
+.page input:focus{
+    border:1px solid #2563eb;
+}
+/* ---------- Buttons ---------- */
+.page button{
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    font-size:17px;
+    cursor:pointer;
+    transition:.3s;
+}
+/* Add / Update */
+.page button[type="submit"]{
+    width:60%;
+    background:#0f172a;
+    color:white;
+}
+.page button[type="submit"]:hover{
+    background:#2563eb;
+}
+/* Buttons Row */
+.btn-row{
+    display:flex;
+    gap:15px;
+    margin-top:10px;
+}
+.btn-row button{
+    flex:1;
+}
+/* Reset */
+.reset-btn{
+    background:#0f172a;
+    color:white;
+}
+.reset-btn:hover{
+    background:#d32f2f;
+}
+/* ---------- Divider ---------- */
+hr{
+    width:80%;
+    margin:45px auto;
+    border:none;
+    border-top:2px solid #d1d5db;
+}
+/* ---------- Table ---------- */
+table{
+    width:65%;
+    margin:20px auto 60px;
+    border-collapse:collapse;
+    background:white;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+    border:2px solid black;
+}
+th{
+    background:#0f172a;
+    color:white;
+    padding:14px;
+    border:2px solid black;
+}
+td{
+    padding:14px;
+    text-align:center;
+    border-bottom:1px solid #e5e7eb;
+    border:2px solid black;
+}
+tr:hover{
+    background:#f1f5f9;
+}
+/* ---------- Edit ---------- */
+.edit-btn{
+    width:80px;
+    background:#0f172a;
+    color:white;
+}
+.edit-btn:hover{
+    background:#4b5563;
+}
+/* ---------- Delete ---------- */
+.delete-btn{
+    width:80px;
+    background:#0f172a;
+    color:white;
+}
+.delete-btn:hover{
+    background:#d32f2f;
+}
+/* ---------- Generic Home Button ---------- */
 .page .btn{
     display:inline-block;
     margin-top:30px;
     padding:12px 24px;
-
     background:#0f172a;
     color:white;
-
     text-decoration:none;
     border-radius:8px;
     transition:.3s;
 }
-
 .page .btn:hover{
     background:#1e293b;
-}
-
-/* Login */
-
-.page form{
-    width:350px;
-    margin:40px auto;
-    padding:30px;
-
-    background:white;
-
-    border-radius:10px;
-
-    box-shadow:0 0 10px rgba(0,0,0,0.15);
-}
-
-.page input{
-    width:100%;
-    padding:12px;
-
-    border:1px solid #cbd5e1;
-    border-radius:6px;
-
-    font-size:16px;
-
-    outline:none;
-}
-
-.page input:focus{
-    border:1px solid #2563eb;
-}
-
-.page button{
-    width:100%;
-    padding:12px;
-
-    background:#0f172a;
-    color:white;
-
-    border:none;
-    border-radius:6px;
-
-    font-size:17px;
-    cursor:pointer;
-
-    transition:.3s;
-}
-
-.page button:hover{
-    background:#2563eb;
 }

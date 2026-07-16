@@ -12,6 +12,7 @@ import Marks from "./pages/Marks";
 import Reports from "./pages/Reports";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import Admins from "./pages/Admins";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import GuestRoute from "./components/GuestRoute";
@@ -81,6 +82,15 @@ function App() {
                     }
                 />
 
+		<Route
+    		    path={ROUTES.ADMINS}
+		    element={
+   		    	<ProtectedRoute>
+            		<Admins />
+        		</ProtectedRoute>
+    		    }
+		/>
+
                 <Route path="*" element={<NotFound />} />
 
             </Routes>
@@ -89,5 +99,4 @@ function App() {
     );
 
 }
-
 export default App;
