@@ -28,6 +28,7 @@ This project is being developed as part of my JavaScript/MERN Full Stack learnin
 - React
 - HTML
 - CSS
+- JavaScript
 - React Router DOM
 - Axios
 - React Toastify
