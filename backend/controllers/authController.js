@@ -5,52 +5,133 @@ const login = (req, res) => {
 
     const { username, password } = req.body;
 
-    const sql = "select * from users where username = ?";
+    // First check Admin/SuperAdmin table
+    const sqlUsers = "select * from users where username=?";
 
-    con.query(sql, [username], (error, result) => {
+    con.query(sqlUsers, [username], (error, result) => {
 
         if (error)
-            return res.status(500).json({ message: "Database Error" });
+            return res.status(500).json({
+                message: "Database Error"
+            });
 
-        if (result.length === 0)
-            return res.status(404).json({ message: "User Not Found" });
+        // ---------- ADMIN / SUPER ADMIN ----------
+        if (result.length > 0) {
 
-        const user = result[0];
+            const user = result[0];
 
-        bcrypt.compare(password, user.password, (error, same) => {
+            bcrypt.compare(password, user.password, (error, same) => {
 
-            if (error)
-                return res.status(500).json({ message: "Authentication Error" });
+                if (error)
+                    return res.status(500).json({
+                        message: "Authentication Error"
+                    });
 
-            if (!same)
-                return res.status(401).json({ message: "Invalid Password" });
+                if (!same)
+                    return res.status(401).json({
+                        message: "Invalid Password"
+                    });
 
-            req.session.user = {
+                req.session.user = {
 
-    		id: user.id,
-    		username: user.username,
-    		role: user.role
+                    id: user.id,
+                    username: user.username,
+                    role: user.role
 
-	    };
+                };
 
-	    res.json({
+                return res.json({
 
-    		message: "Login Successful",
+                    message: "Login Successful",
 
-    		user: {
+                    user: {
 
-        		id: user.id,
-        		username: user.username,
-        		name: user.name,
-        		email: user.email,
-        		role: user.role
+                        id: user.id,
+                        username: user.username,
+                        name: user.name,
+                        email: user.email,
+                        role: user.role
 
-    		}
+                    }
 
-	    });
-	});
+                });
+
+            });
+
+        }
+
+        // ---------- STUDENT ----------
+        else {
+
+            const sqlStudents = "select * from students where username=?";
+
+            con.query(sqlStudents, [username], (error, result) => {
+
+                if (error)
+                    return res.status(500).json({
+                        message: "Database Error"
+                    });
+
+                if (result.length === 0)
+                    return res.status(404).json({
+                        message: "User Not Found"
+                    });
+
+                const student = result[0];
+
+                // Plain password for now
+                if (password !== student.password)
+                    return res.status(401).json({
+                        message: "Invalid Password"
+                    });
+
+                req.session.user = {
+
+                    id: student.id,
+                    username: student.username,
+                    role: "student"
+
+                };
+
+                return res.json({
+
+                    message: "Login Successful",
+
+                    user: {
+
+                        id: student.id,
+                        username: student.username,
+                        name: student.name,
+                        email: student.email,
+                        role: "student"
+
+                    }
+
+                });
+
+            });
+
+        }
 
     });
 
 };
-module.exports = {login};
+
+const logout = (req, res) => {
+
+    req.session.destroy((error) => {
+
+        if (error)
+            return res.status(500).json({
+                message: "Logout Failed"
+            });
+
+        res.json({
+            message: "Logout Successful"
+        });
+
+    });
+
+};
+
+module.exports = { login,logout };

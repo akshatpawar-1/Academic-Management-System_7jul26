@@ -1,11 +1,325 @@
+import { useState, useEffect } from "react";
+import {
+    addMark as saveMark,
+    getMarks,
+    updateMark,
+    deleteMark
+} from "../services/markService";
+
+import { getStudents } from "../services/studentService";
+
 function Marks() {
+
+    const [student_id, setStudentId] = useState("");
+    const [subject, setSubject] = useState("");
+    const [marks, setMarks] = useState("");
+
+    const [students, setStudents] = useState([]);
+    const [allMarks, setAllMarks] = useState([]);
+
+    const [editing, setEditing] = useState(false);
+    const [id, setId] = useState(null);
+
+    const hStudentId = (event) => { setStudentId(event.target.value); };
+    const hSubject = (event) => { setSubject(event.target.value); };
+    const hMarks = (event) => { setMarks(event.target.value); };
+
+    const loadStudents = async () => {
+
+        try {
+
+            const res = await getStudents();
+
+            setStudents(res.data);
+
+        }
+        catch (error) {
+
+            console.log(error.response.data.message);
+
+        }
+
+    };
+
+    const loadMarks = async () => {
+
+        try {
+
+            const res = await getMarks();
+
+            console.log(res.data);
+
+            setAllMarks(res.data);
+
+        }
+        catch (error) {
+
+            console.log(error.response.data.message);
+
+        }
+
+    };
+
+    useEffect(() => {
+
+        loadStudents();
+        loadMarks();
+
+    }, []);
+
+    const editMark = (mark) => {
+
+        setId(mark.id);
+
+        setStudentId(mark.student_id);
+        setSubject(mark.subject);
+        setMarks(mark.marks);
+
+        setEditing(true);
+
+    };
+
+    const removeMark = async (id) => {
+
+        const ans = window.confirm("Are you sure you want to delete this Mark?");
+
+        if (!ans)
+            return;
+
+        try {
+
+            const res = await deleteMark(id);
+
+            console.log(res.data);
+
+            loadMarks();
+
+        }
+        catch (error) {
+
+            console.log(error.response.data.message);
+
+        }
+
+    };
+
+    const saveMarkData = async (event) => {
+
+        event.preventDefault();
+
+        try {
+
+            const data = {
+
+                student_id,
+                subject,
+                marks
+
+            };
+
+            let res;
+
+            if (editing) {
+
+                res = await updateMark(id, data);
+
+                setEditing(false);
+                setId(null);
+
+            }
+            else {
+
+                res = await saveMark(data);
+
+            }
+
+            console.log(res.data);
+
+            setStudentId("");
+            setSubject("");
+            setMarks("");
+
+            loadMarks();
+
+        }
+        catch (error) {
+
+            console.log(error.response.data.message);
+
+        }
+
+    };
+
+    const resetForm = () => {
+
+        setStudentId("");
+        setSubject("");
+        setMarks("");
+
+        setEditing(false);
+        setId(null);
+
+    };
+
     return (
+
         <>
-	<div className="page">
-            <h1>Marks</h1>
-	</div>
+            <div className="page">
+
+                <h1>Marks Management</h1>
+
+                <form onSubmit={saveMarkData}>
+
+                    <select
+                        value={student_id}
+                        onChange={hStudentId}
+                        required
+                    >
+
+                        <option value="">
+                            Select Student
+                        </option>
+
+                        {
+
+                            students.map((student) => (
+
+                                <option
+                                    key={student.id}
+                                    value={student.id}
+                                >
+
+                                    {student.rollno} - {student.name}
+
+                                </option>
+
+                            ))
+
+                        }
+
+                    </select>
+
+                    <br /><br />
+
+                    <input
+                        type="text"
+                        placeholder="Enter Subject"
+                        value={subject}
+                        onChange={hSubject}
+                        required
+                    />
+
+                    <br /><br />
+
+                    <input
+                        type="number"
+                        placeholder="Enter Marks"
+                        value={marks}
+                        onChange={hMarks}
+                        required
+                    />
+
+                    <br /><br />
+
+                    <div className="btn-row">
+
+                        <button type="submit">
+
+                            {editing ? "Update Marks" : "Add Marks"}
+
+                        </button>
+
+                        <button
+                            type="button"
+                            className="reset-btn"
+                            onClick={resetForm}
+                        >
+
+                            Reset
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+                <hr />
+
+                <h2>All Marks</h2>
+
+                <table border="1" cellPadding="10">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Roll No</th>
+                            <th>Name</th>
+                            <th>Subject</th>
+                            <th>Marks</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {
+
+                            allMarks.map((mark) => (
+
+                                <tr key={mark.id}>
+
+                                    <td>{mark.rollno}</td>
+                                    <td>{mark.name}</td>
+                                    <td>{mark.subject}</td>
+                                    <td>{mark.marks}</td>
+
+                                    <td>
+
+                                        <button
+                                            type="button"
+                                            className="edit-btn"
+                                            onClick={() => editMark(mark)}
+                                        >
+
+                                            Edit
+
+                                        </button>
+
+                                    </td>
+
+                                    <td>
+
+                                        <button
+                                            type="button"
+                                            className="delete-btn"
+                                            onClick={() => removeMark(mark.id)}
+                                        >
+
+                                            Delete
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+
+                            ))
+
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
         </>
+
     );
+
 }
 
 export default Marks;

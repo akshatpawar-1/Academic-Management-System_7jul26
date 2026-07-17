@@ -173,3 +173,16 @@ tr:hover{
 .page .btn:hover{
     background:#1e293b;
 }
+
+.page select{
+    width:100%;
+    padding:13px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    font-size:17px;
+    outline:none;
+}
+
+.page select:focus{
+    border:1px solid #2563eb;
+}

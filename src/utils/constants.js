@@ -7,6 +7,8 @@ export const ROUTES = {
     MARKS: "/marks",
     REPORTS:"/reports",
     PROFILE: "/profile",
-    ADMINS: "/admins"
+    ADMINS: "/admins",
+    LOGOUT: "/logout",
+    STUDENT_DASHBOARD: "/student-dashboard"
 
 };
