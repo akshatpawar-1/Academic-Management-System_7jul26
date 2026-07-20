@@ -13,6 +13,7 @@ function Marks() {
     const [student_id, setStudentId] = useState("");
     const [subject, setSubject] = useState("");
     const [marks, setMarks] = useState("");
+    const [semester, setSemester] = useState("");
 
     const [students, setStudents] = useState([]);
     const [allMarks, setAllMarks] = useState([]);
@@ -23,6 +24,7 @@ function Marks() {
     const hStudentId = (event) => { setStudentId(event.target.value); };
     const hSubject = (event) => { setSubject(event.target.value); };
     const hMarks = (event) => { setMarks(event.target.value); };
+    const hSemester = (event) => { setSemester(event.target.value); };
 
     const loadStudents = async () => {
 
@@ -74,6 +76,7 @@ function Marks() {
         setStudentId(mark.student_id);
         setSubject(mark.subject);
         setMarks(mark.marks);
+	setSemester(mark.semester);
 
         setEditing(true);
 
@@ -113,7 +116,8 @@ function Marks() {
 
                 student_id,
                 subject,
-                marks
+                marks,
+		semester
 
             };
 
@@ -138,6 +142,7 @@ function Marks() {
             setStudentId("");
             setSubject("");
             setMarks("");
+	    setSemester("");
 
             loadMarks();
 
@@ -155,6 +160,7 @@ function Marks() {
         setStudentId("");
         setSubject("");
         setMarks("");
+	setSemester("");
 
         setEditing(false);
         setId(null);
@@ -221,6 +227,29 @@ function Marks() {
 
                     <br /><br />
 
+		    <select
+    			value={semester}
+    			onChange={hSemester}
+    			required
+		    >
+
+    		    <option value="">
+        		Select Semester
+    		    </option>
+
+   		    <option value="1">Semester 1</option>
+    		    <option value="2">Semester 2</option>
+    		    <option value="3">Semester 3</option>
+    		    <option value="4">Semester 4</option>
+    		    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+    		    <option value="7">Semester 7</option>
+    		    <option value="8">Semester 8</option>
+
+		    </select>
+
+		    <br /><br />
+
                     <div className="btn-row">
 
                         <button type="submit">
@@ -255,6 +284,7 @@ function Marks() {
 
                             <th>Roll No</th>
                             <th>Name</th>
+			    <th>Semester</th>
                             <th>Subject</th>
                             <th>Marks</th>
                             <th>Edit</th>
@@ -274,6 +304,7 @@ function Marks() {
 
                                     <td>{mark.rollno}</td>
                                     <td>{mark.name}</td>
+				    <td>{mark.semester}</td>
                                     <td>{mark.subject}</td>
                                     <td>{mark.marks}</td>
 

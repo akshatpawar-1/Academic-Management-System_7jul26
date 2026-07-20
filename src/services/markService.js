@@ -23,3 +23,9 @@ export const deleteMark = (id) => {
     return api.delete(`/marks/${id}`);
 
 };
+
+export const getStudentMarks = () => {
+
+    return api.get("/marks/student");
+
+};

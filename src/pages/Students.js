@@ -14,7 +14,6 @@ function Students() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [program, setProgram] = useState("");
-    const [semester, setSemester] = useState("");
     const [students, setStudents] = useState([]);
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState(null);
@@ -25,7 +24,6 @@ function Students() {
     const hEmail = (event) => setEmail(event.target.value);
     const hPassword = (event) => setPassword(event.target.value);
     const hProgram = (event) => setProgram(event.target.value);
-    const hSemester = (event) => setSemester(event.target.value);
 
     const loadStudents = async () => {
 
@@ -44,6 +42,12 @@ function Students() {
 
     };
 
+    useEffect(() => {
+
+        loadStudents();
+
+    }, []);
+
     const editStudent = (student) => {
 
         setId(student.id);
@@ -53,7 +57,6 @@ function Students() {
         setName(student.name);
         setEmail(student.email);
         setProgram(student.program);
-        setSemester(student.semester);
 
         // Never prefill password
         setPassword("");
@@ -86,12 +89,6 @@ function Students() {
 
     };
 
-    useEffect(() => {
-
-        loadStudents();
-
-    }, []);
-
     const saveStudentData = async (event) => {
 
         event.preventDefault();
@@ -107,8 +104,7 @@ function Students() {
                     username,
                     name,
                     email,
-                    program,
-                    semester
+                    program
                 };
 
             }
@@ -120,8 +116,7 @@ function Students() {
                     name,
                     email,
                     password,
-                    program,
-                    semester
+                    program
                 };
 
             }
@@ -150,7 +145,6 @@ function Students() {
             setEmail("");
             setPassword("");
             setProgram("");
-            setSemester("");
 
             loadStudents();
 
@@ -171,7 +165,6 @@ function Students() {
         setEmail("");
         setPassword("");
         setProgram("");
-        setSemester("");
 
         setEditing(false);
         setId(null);
@@ -251,16 +244,6 @@ function Students() {
 
                     <br /><br />
 
-                    <input
-                        type="number"
-                        placeholder="Enter Semester"
-                        value={semester}
-                        onChange={hSemester}
-                        required
-                    />
-
-                    <br /><br />
-
                     <div className="btn-row">
 
                         <button type="submit">
@@ -294,7 +277,6 @@ function Students() {
                             <th>Name</th>
                             <th>Email</th>
                             <th>Program</th>
-                            <th>Semester</th>
                             <th>Edit</th>
                             <th>Delete</th>
 
@@ -313,9 +295,9 @@ function Students() {
                                 <td>{student.name}</td>
                                 <td>{student.email}</td>
                                 <td>{student.program}</td>
-                                <td>{student.semester}</td>
 
                                 <td>
+
                                     <button
                                         type="button"
                                         className="edit-btn"
@@ -323,9 +305,11 @@ function Students() {
                                     >
                                         Edit
                                     </button>
+
                                 </td>
 
                                 <td>
+
                                     <button
                                         type="button"
                                         className="delete-btn"
@@ -333,6 +317,7 @@ function Students() {
                                     >
                                         Delete
                                     </button>
+
                                 </td>
 
                             </tr>

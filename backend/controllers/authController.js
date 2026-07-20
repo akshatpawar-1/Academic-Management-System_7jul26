@@ -5,7 +5,7 @@ const login = (req, res) => {
 
     const { username, password } = req.body;
 
-    // First check Admin/SuperAdmin table
+    // ---------- CHECK ADMIN / SUPER ADMIN ----------
     const sqlUsers = "select * from users where username=?";
 
     con.query(sqlUsers, [username], (error, result) => {
@@ -15,7 +15,6 @@ const login = (req, res) => {
                 message: "Database Error"
             });
 
-        // ---------- ADMIN / SUPER ADMIN ----------
         if (result.length > 0) {
 
             const user = result[0];
@@ -36,6 +35,8 @@ const login = (req, res) => {
 
                     id: user.id,
                     username: user.username,
+                    name: user.name,
+                    email: user.email,
                     role: user.role
 
                 };
@@ -44,15 +45,7 @@ const login = (req, res) => {
 
                     message: "Login Successful",
 
-                    user: {
-
-                        id: user.id,
-                        username: user.username,
-                        name: user.name,
-                        email: user.email,
-                        role: user.role
-
-                    }
+                    user: req.session.user
 
                 });
 
@@ -60,7 +53,7 @@ const login = (req, res) => {
 
         }
 
-        // ---------- STUDENT ----------
+        // ---------- CHECK STUDENT ----------
         else {
 
             const sqlStudents = "select * from students where username=?";
@@ -79,33 +72,38 @@ const login = (req, res) => {
 
                 const student = result[0];
 
-                // Plain password for now
-                if (password !== student.password)
-                    return res.status(401).json({
-                        message: "Invalid Password"
-                    });
+                bcrypt.compare(password, student.password, (error, same) => {
 
-                req.session.user = {
+                    if (error)
+                        return res.status(500).json({
+                            message: "Authentication Error"
+                        });
 
-                    id: student.id,
-                    username: student.username,
-                    role: "student"
+                    if (!same)
+                        return res.status(401).json({
+                            message: "Invalid Password"
+                        });
 
-                };
-
-                return res.json({
-
-                    message: "Login Successful",
-
-                    user: {
+                    req.session.user = {
 
                         id: student.id,
+                        rollno: student.rollno,
                         username: student.username,
                         name: student.name,
                         email: student.email,
+                        program: student.program,
+                        semester: student.semester,
                         role: "student"
 
-                    }
+                    };
+
+                    return res.json({
+
+                        message: "Login Successful",
+
+                        user: req.session.user
+
+                    });
 
                 });
 
@@ -134,4 +132,7 @@ const logout = (req, res) => {
 
 };
 
-module.exports = { login,logout };
+module.exports = {
+    login,
+    logout
+};

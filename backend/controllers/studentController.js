@@ -1,4 +1,5 @@
 const con = require("../config/db");
+const bcrypt = require("bcrypt");
 
 const addStudent = (req, res) => {
 
@@ -7,33 +8,48 @@ const addStudent = (req, res) => {
         username,
         name,
         email,
-	password,
-        program,
-        semester
+        password,
+        program
     } = req.body;
 
-    const sql = `
-        insert into students
-        (rollno,username,name,email,password,program,semester)
-        values(?,?,?,?,?,?,?)
-    `;
+    bcrypt.hash(password, 10, (error, hashedPassword) => {
 
-    con.query(
-        sql,
-        [rollno,username, name, email,password, program, semester],
-        (error, result) => {
-
-            if (error)
-                return res.status(500).json({
-                    message: "Database Error"
-                });
-
-            res.json({
-                message: "Student Added Successfully"
+        if (error)
+            return res.status(500).json({
+                message: "Password Hashing Error"
             });
 
-        }
-    );
+        const sql = `
+            insert into students
+            (rollno, username, name, email, password, program)
+            values (?, ?, ?, ?, ?, ?)
+        `;
+
+        con.query(
+            sql,
+            [
+                rollno,
+                username,
+                name,
+                email,
+                hashedPassword,
+                program
+            ],
+            (error, result) => {
+
+                if (error)
+                    return res.status(500).json({
+                        message: "Database Error"
+                    });
+
+                res.json({
+                    message: "Student Added Successfully"
+                });
+
+            }
+        );
+
+    });
 
 };
 
@@ -60,23 +76,20 @@ const updateStudent = (req, res) => {
 
     const {
         rollno,
-	username,
+        username,
         name,
         email,
-	password,
-        program,
-        semester
+        program
     } = req.body;
 
     const sql = `
         update students
-        set rollno=?,
-	    username=?,
+        set
+            rollno=?,
+            username=?,
             name=?,
             email=?,
-	    password=?,
-            program=?,
-            semester=?
+            program=?
         where id=?
     `;
 
@@ -84,12 +97,10 @@ const updateStudent = (req, res) => {
         sql,
         [
             rollno,
-	    username,
+            username,
             name,
             email,
-	    password,
             program,
-            semester,
             id
         ],
         (error, result) => {
