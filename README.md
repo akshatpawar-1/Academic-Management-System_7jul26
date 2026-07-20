@@ -28,6 +28,7 @@ This project is being developed as part of my JavaScript/MERN Full Stack learnin
 - React
 - HTML
 - CSS
+- JavaScript
 - React Router DOM
 - Axios
 - React Toastify
@@ -97,3 +98,22 @@ Mumbai, Maharashtra, India
 ## Status
 
 Currently Under Development
+
+### Completed
+
+- Session-Based Authentication
+- Role-Based Authorization
+- Admin CRUD
+- Student CRUD
+- Marks CRUD
+- Student Login
+- Protected & Guest Routes
+
+### Upcoming
+
+- Profile Module
+- Reports Module
+- Dashboard Analytics
+- Email Notifications
+- Student Password Hashing
+- UI Improvements & Validations
