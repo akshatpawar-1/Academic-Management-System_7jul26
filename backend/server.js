@@ -10,6 +10,7 @@ const sessionRoutes = require("./routes/sessionRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const markRoutes = require("./routes/markRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use("/session", sessionRoutes);
 app.use("/admins", adminRoutes);
 app.use("/students", studentRoutes);
 app.use("/marks", markRoutes);
+app.use("/dashboard", dashboardRoutes);
 
 // Start Server
 app.listen(process.env.PORT, () => {
