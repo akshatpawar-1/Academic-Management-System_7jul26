@@ -6,6 +6,12 @@ This project is being developed as part of my JavaScript/MERN Full Stack learnin
 
 ---
 
+## Screenshots
+
+Screenshots will be added after Version 1.0.
+
+---
+
 ## Features
 
 - Session-Based Authentication
