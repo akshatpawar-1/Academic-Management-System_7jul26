@@ -93,6 +93,14 @@ This project uses Express Session Authentication instead of JWT.
 
 ---
 
+## Authorization Hierarchy
+
+- **Super Admin** → Full System Access
+- **Admin** → Student & Marks Management
+- **Student** → Personal Academic Dashboard
+
+---
+
 ## Learning Objectives
 
 - Build a production-style React application.
