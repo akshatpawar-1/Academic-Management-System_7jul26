@@ -101,6 +101,18 @@ This project uses Express Session Authentication instead of JWT.
 
 ---
 
+## Design Principles
+
+This project is being developed with a focus on:
+
+- Clean Code
+- Modular Architecture
+- Reusable Components
+- Separation of Concerns
+- Maintainable Folder Structure
+
+---
+
 ## Learning Objectives
 
 - Build a production-style React application.
