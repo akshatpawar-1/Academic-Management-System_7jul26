@@ -173,7 +173,6 @@ tr:hover{
 .page .btn:hover{
     background:#1e293b;
 }
-
 .page select{
     width:100%;
     padding:13px;
@@ -182,7 +181,83 @@ tr:hover{
     font-size:17px;
     outline:none;
 }
-
 .page select:focus{
     border:1px solid #2563eb;
+}
+/* ---------- Dashboard Stat Cards ---------- */
+.dashboard-cards{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin:20px auto;
+}
+.stat-card{
+    background:white;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+    border-radius:10px;
+    padding:15px 30px;
+    min-width:160px;
+}
+.stat-card h2{
+    margin:0 0 8px;
+    font-size:15px;
+    color:#64748b;
+}
+.stat-card p{
+    margin:0;
+    font-size:26px;
+    font-weight:bold;
+    color:#0f172a;
+}
+/* ---------- Dashboard Panels ---------- */
+.dashboard-panels{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin:20px auto;
+    padding:0 40px;
+}
+.panel{
+    background:white;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+    border-radius:10px;
+    padding:20px;
+    flex:1;
+}
+.panel table{
+    width:100%;
+    margin:0;
+    box-shadow:none;
+}
+.panel tr:hover{
+    background:none;
+}
+
+/* ---------- Dashboard Panel Links ---------- */
+.panel-link{
+    display:inline-block;
+    margin-top:25px;
+    text-decoration:none;
+    color:#2563eb;
+    font-size:15px;
+    transition:0.3s;
+}
+
+.welcome {
+    font-size: 25px;
+    font-weight: 250;
+    margin: 20px 0;
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

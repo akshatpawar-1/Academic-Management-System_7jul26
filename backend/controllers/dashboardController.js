@@ -45,7 +45,33 @@ const getDashboard = (req, res) => {
 
                             dashboard.recentStudent = students[0] || null;
 
-                            res.json(dashboard);
+                         
+                            con.query(
+                                `
+                                select
+                                    students.name,
+                                    marks.subject,
+                                    marks.semester,
+                                    marks.marks
+                                from marks
+                                join students
+                                on marks.student_id = students.id
+                                order by marks.id desc
+                                limit 5
+                                `,
+                                (error, marks) => {
+
+                                    if (error)
+                                        return res.status(500).json({
+                                            message: "Database Error"
+                                        });
+
+                                    dashboard.recentMarks = marks;
+
+                                    res.json(dashboard);
+
+                                }
+                            );
 
                         }
                     );

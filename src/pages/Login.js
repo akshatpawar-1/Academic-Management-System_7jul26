@@ -35,10 +35,14 @@ function Login() {
             setUsername("");
             setPassword("");
 
-            if (res.data.user.role === "student")
+            if (res.data.user.role === "student"){
                 navigate("/student-dashboard");
-            else
+	    }
+            else{
+
+		localStorage.setItem("showWelcome", "true");
                 navigate("/dashboard");
+	    }
 
         }
         catch (error) {
