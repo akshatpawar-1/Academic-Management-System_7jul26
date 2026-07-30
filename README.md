@@ -18,11 +18,12 @@ Screenshots will be added after Version 1.0.
 - Password Hashing using bcrypt
 - Student Management
 - Semester-wise Marks Management
-- Semester-wise Student Dashboard
+- Enhanced Semester-wise Student Dashboard
 - Grade & Percentage Calculation
+- Student Profile Management
+- Student Photo Upload & Display
 - Academic Reports
 - PDF Report Card Generation
-- Student Photo Upload
 - Student Search
 - Responsive User Interface
 
@@ -68,6 +69,8 @@ This project uses Express Session Authentication instead of JWT.
 - Edit Student
 - Delete Student
 - View Students
+- Upload Student Photo
+- Student Profile
 
 ### Marks Module
 
@@ -80,8 +83,10 @@ This project uses Express Session Authentication instead of JWT.
 
 ### Dashboard Module
 
+- Admin Dashboard
 - Student Dashboard
 - Semester-wise Academic Summary
+- Recent Student & Marks Overview
 - Grade Display
 - Percentage Display
 - Subject-wise Marks
@@ -97,7 +102,7 @@ This project uses Express Session Authentication instead of JWT.
 
 - **Super Admin** → Full System Access
 - **Admin** → Student & Marks Management
-- **Student** → Personal Academic Dashboard
+- **Student** → Personal Profile & Academic Dashboard
 
 ---
 
@@ -148,16 +153,18 @@ Currently Under Development
 - Student Password Hashing
 - Protected & Guest Routes
 - Student Profile Page
-- Semester-wise Student Dashboard
+- Student Photo Upload & Display
+- Student Profile Photo Management
+- Enhanced Semester-wise Student Dashboard
+- Admin Dashboard
 - Grade Calculator Utility
 - Percentage Calculator Utility
 
 ### Upcoming
 
 - Reports Module
+- Search & Filters
 - Dashboard Analytics
 - Email Notifications
-- Student Photo Upload
-- Search & Filters
-- UI Improvements
+- UI/UX Improvements
 - Form Validations
