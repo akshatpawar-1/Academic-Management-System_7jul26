@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-
 import { useAuth } from "../context/AuthContext";
-
 import { getStudentMarks } from "../services/markService";
 
 import calculatePercentage from "../utils/percentageCalculator";
@@ -38,7 +36,8 @@ function StudentDashboard() {
 
     };
 
-    // Group marks semester-wise
+    // Group Marks Semester Wise
+
     const semesterWiseMarks = {};
 
     marks.forEach((m) => {
@@ -64,13 +63,17 @@ function StudentDashboard() {
                     <tbody>
 
                         <tr>
+
                             <th>Roll No</th>
                             <td>{user?.rollno}</td>
+
                         </tr>
 
                         <tr>
+
                             <th>Program</th>
                             <td>{user?.program}</td>
+
                         </tr>
 
                     </tbody>
@@ -79,100 +82,106 @@ function StudentDashboard() {
 
                 <br />
 
-                {
+                <div className="student-dashboard">
 
-                    Object.keys(semesterWiseMarks).map((semester) => {
+                    <div className="semester-grid">
 
-                        const semesterMarks = semesterWiseMarks[semester];
+                        {
 
-                        const marksArray = semesterMarks.map(
-                            (m) => m.marks
-                        );
+                            Object.keys(semesterWiseMarks)
+                                .sort((a, b) => Number(b) - Number(a))
+                                .map((semester) => {
 
-                        const percentage =
-                            calculatePercentage(marksArray);
+                                    const semesterMarks = semesterWiseMarks[semester];
 
-                        const grade =
-                            calculateGrade(Number(percentage));
+                                    const marksArray = semesterMarks.map(
+                                        (m) => m.marks
+                                    );
 
-                        return (
+                                    const percentage =
+                                        calculatePercentage(marksArray);
 
-                            <div
-                                key={semester}
-                                style={{
-                                    marginBottom: "40px"
-                                }}
-                            >
+                                    const grade =
+                                        calculateGrade(Number(percentage));
 
-                                <h2>Semester {semester}</h2>
+                                    return (
 
-                                <table border="1" cellPadding="10">
+                                        <div
+                                            key={semester}
+                                            className="semester-card"
+                                        >
 
-                                    <tbody>
+                                            <div className="semester-header">
 
-                                        <tr>
+                                                <h2>Semester {semester}</h2>
 
-                                            <th>Percentage</th>
+                                            </div>
 
-                                            <td>{percentage}%</td>
+                                            <div className="semester-summary">
 
-                                        </tr>
+                                                <div className="summary-item">
 
-                                        <tr>
+                                                    <h3>Percentage</h3>
 
-                                            <th>Grade</th>
+                                                    <p>{percentage}%</p>
 
-                                            <td>{grade}</td>
+                                                </div>
 
-                                        </tr>
+                                                <div className="summary-item">
 
-                                    </tbody>
+                                                    <h3>Grade</h3>
 
-                                </table>
+                                                    <p>{grade}</p>
 
-                                <br />
+                                                </div>
 
-                                <table border="1" cellPadding="10">
+                                            </div>
 
-                                    <thead>
+                                            <table className="semester-table">
 
-                                        <tr>
+                                                <thead>
 
-                                            <th>Subject</th>
-                                            <th>Marks</th>
+                                                    <tr>
 
-                                        </tr>
+                                                        <th>Subject</th>
+                                                        <th>Marks</th>
 
-                                    </thead>
+                                                    </tr>
 
-                                    <tbody>
+                                                </thead>
 
-                                        {
+                                                <tbody>
 
-                                            semesterMarks.map((m) => (
+                                                    {
 
-                                                <tr key={m.id}>
+                                                        semesterMarks.map((m) => (
 
-                                                    <td>{m.subject}</td>
-                                                    <td>{m.marks}</td>
+                                                            <tr key={m.id}>
 
-                                                </tr>
+                                                                <td>{m.subject}</td>
+                                                                <td>{m.marks}</td>
 
-                                            ))
+                                                            </tr>
 
-                                        }
+                                                        ))
 
-                                    </tbody>
+                                                    }
 
-                                </table>
+                                                </tbody>
 
-                            </div>
+                                            </table>
 
-                        );
+                                        </div>
 
-                    })
+                                    );
 
-                }
+                                })
+
+                        }
+
+                    </div>
+
+                </div>
 
             </div>
         </>

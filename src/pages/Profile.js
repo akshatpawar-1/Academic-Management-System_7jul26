@@ -10,33 +10,60 @@ function Profile() {
 
                 <h1>My Profile</h1>
 
-                <table border="1" cellPadding="10">
+                <div className="profile-card">
 
-                    <tbody>
+                    {/* Left Side */}
+                    <div className="profile-photo-section">
 
-                        <tr>
-                            <th>Name</th>
-                            <td>{user?.name}</td>
-                        </tr>
+                        {
+                            user?.photo ?
 
-                        <tr>
-                            <th>Username</th>
-                            <td>{user?.username}</td>
-                        </tr>
+                                <img
+                                    src={`http://localhost:5000/uploads/${user.photo}`}
+                                    alt="Profile"
+                                    className="profile-img"
+                                />
 
-                        <tr>
-                            <th>Email</th>
-                            <td>{user?.email}</td>
-                        </tr>
+                                :
 
-                        <tr>
-                            <th>Role</th>
-                            <td>{user?.role}</td>
-                        </tr>
+                                <img
+                                    src="/default-user.png"
+                                    alt="Default"
+                                    className="profile-img"
+                                />
 
-                    </tbody>
+                        }
 
-                </table>
+                    </div>
+
+                    {/* Right Side */}
+                    <div className="profile-details-section">
+
+                        <div className="profile-row">
+                            <span className="profile-label">Name</span>
+                            <span className="profile-value">{user?.name}</span>
+                        </div>
+
+                        <div className="profile-row">
+                            <span className="profile-label">Username</span>
+                            <span className="profile-value">{user?.username}</span>
+                        </div>
+
+                        <div className="profile-row">
+                            <span className="profile-label">Email</span>
+                            <span className="profile-value">{user?.email}</span>
+                        </div>
+
+                        <div className="profile-row">
+                            <span className="profile-label">Role</span>
+                            <span className="profile-value">
+                                {user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1)}
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
         </>

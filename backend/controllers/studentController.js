@@ -12,6 +12,9 @@ const addStudent = (req, res) => {
         program
     } = req.body;
 
+    // Uploaded photo filename
+    const photo = req.file ? req.file.filename : null;
+
     bcrypt.hash(password, 10, (error, hashedPassword) => {
 
         if (error)
@@ -21,8 +24,16 @@ const addStudent = (req, res) => {
 
         const sql = `
             insert into students
-            (rollno, username, name, email, password, program)
-            values (?, ?, ?, ?, ?, ?)
+            (
+                rollno,
+                username,
+                name,
+                email,
+                password,
+                program,
+                photo
+            )
+            values (?, ?, ?, ?, ?, ?, ?)
         `;
 
         con.query(
@@ -33,7 +44,8 @@ const addStudent = (req, res) => {
                 name,
                 email,
                 hashedPassword,
-                program
+                program,
+                photo
             ],
             (error, result) => {
 
@@ -82,6 +94,8 @@ const updateStudent = (req, res) => {
         program
     } = req.body;
 
+    const photo = req.file ? req.file.filename : null;
+
     const sql = `
         update students
         set
@@ -89,7 +103,8 @@ const updateStudent = (req, res) => {
             username=?,
             name=?,
             email=?,
-            program=?
+            program=?,
+            photo = coalesce(?, photo)
         where id=?
     `;
 
@@ -101,6 +116,7 @@ const updateStudent = (req, res) => {
             name,
             email,
             program,
+            photo,
             id
         ],
         (error, result) => {

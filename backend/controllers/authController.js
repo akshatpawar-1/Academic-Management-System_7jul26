@@ -93,6 +93,7 @@ const login = (req, res) => {
                         email: student.email,
                         program: student.program,
                         semester: student.semester,
+			photo: student.photo,
                         role: "student"
 
                     };

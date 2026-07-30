@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
     addStudent as saveStudent,
     getStudents,
@@ -8,13 +8,18 @@ import {
 
 function Students() {
 
+    const photoRef = useRef();
+
     const [rollno, setRollno] = useState("");
     const [username, setUsername] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [program, setProgram] = useState("");
+    const [photo, setPhoto] = useState(null);
+
     const [students, setStudents] = useState([]);
+
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState(null);
 
@@ -24,6 +29,7 @@ function Students() {
     const hEmail = (event) => setEmail(event.target.value);
     const hPassword = (event) => setPassword(event.target.value);
     const hProgram = (event) => setProgram(event.target.value);
+    const hPhoto = (event) => setPhoto(event.target.files[0]);
 
     const loadStudents = async () => {
 
@@ -36,7 +42,7 @@ function Students() {
         }
         catch (error) {
 
-            console.log(error.response.data.message);
+            console.log(error.response?.data?.message || error.message);
 
         }
 
@@ -58,8 +64,9 @@ function Students() {
         setEmail(student.email);
         setProgram(student.program);
 
-        // Never prefill password
         setPassword("");
+        setPhoto(null);
+	photoRef.current.value = "";
 
         setEditing(true);
 
@@ -67,7 +74,9 @@ function Students() {
 
     const removeStudent = async (id) => {
 
-        const ans = window.confirm("Are you sure you want to delete this Student?");
+        const ans = window.confirm(
+            "Are you sure you want to delete this Student?"
+        );
 
         if (!ans)
             return;
@@ -83,7 +92,7 @@ function Students() {
         }
         catch (error) {
 
-            console.log(error.response.data.message);
+            console.log(error.response?.data?.message || error.message);
 
         }
 
@@ -95,29 +104,23 @@ function Students() {
 
         try {
 
-            let data;
+            const data = new FormData();
 
-            if (editing) {
+            data.append("rollno", rollno);
+            data.append("username", username);
+            data.append("name", name);
+            data.append("email", email);
+            data.append("program", program);
 
-                data = {
-                    rollno,
-                    username,
-                    name,
-                    email,
-                    program
-                };
+            if (!editing) {
+
+                data.append("password", password);
 
             }
-            else {
 
-                data = {
-                    rollno,
-                    username,
-                    name,
-                    email,
-                    password,
-                    program
-                };
+            if (photo) {
+
+                data.append("photo", photo);
 
             }
 
@@ -145,13 +148,15 @@ function Students() {
             setEmail("");
             setPassword("");
             setProgram("");
+            setPhoto(null);
+	    photoRef.current.value = "";
 
             loadStudents();
 
         }
         catch (error) {
 
-            console.log(error.response.data.message);
+            console.log(error.response?.data?.message || error.message);
 
         }
 
@@ -165,6 +170,8 @@ function Students() {
         setEmail("");
         setPassword("");
         setProgram("");
+        setPhoto(null);
+	photoRef.current.value = "";
 
         setEditing(false);
         setId(null);
@@ -244,6 +251,15 @@ function Students() {
 
                     <br /><br />
 
+                    <input
+			ref={photoRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={hPhoto}
+                    />
+
+                    <br /><br />
+
                     <div className="btn-row">
 
                         <button type="submit">
@@ -271,7 +287,8 @@ function Students() {
                     <thead>
 
                         <tr>
-
+				
+			    <th>Photo</th>
                             <th>Roll No</th>
                             <th>User Name</th>
                             <th>Name</th>
@@ -289,7 +306,28 @@ function Students() {
                         {students.map((student) => (
 
                             <tr key={student.id}>
+				<td>
 
+    					{
+        					student.photo ?
+
+            						<img
+                						src={`http://localhost:5000/uploads/${student.photo}`}
+                						alt="Student"
+                						width="70"
+                						height="70"
+                						style={{
+                    							borderRadius: "50%",
+                    							objectFit: "cover",
+                    							cursor: "pointer"
+                						}}
+            						/>
+
+        						:
+            							"No Photo"
+    					}
+
+				</td>
                                 <td>{student.rollno}</td>
                                 <td>{student.username}</td>
                                 <td>{student.name}</td>

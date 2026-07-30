@@ -6,6 +6,8 @@ const {
     isAdmin
 } = require("../middleware/authMiddleware");
 
+const upload = require("../middleware/multerMiddleware");
+
 const {
     addStudent,
     getStudents,
@@ -17,6 +19,7 @@ router.post(
     "/",
     isAuthenticated,
     isAdmin,
+    upload.single("photo"),
     addStudent
 );
 
@@ -30,6 +33,7 @@ router.put(
     "/:id",
     isAuthenticated,
     isAdmin,
+    upload.single("photo"),
     updateStudent
 );
 
