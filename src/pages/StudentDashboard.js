@@ -4,12 +4,14 @@ import { getStudentMarks } from "../services/markService";
 
 import calculatePercentage from "../utils/percentageCalculator";
 import calculateGrade from "../utils/gradeCalculator";
+import Loader from "../components/Loader";
 
 function StudentDashboard() {
 
     const { user } = useAuth();
 
     const [marks, setMarks] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
 
@@ -18,6 +20,8 @@ function StudentDashboard() {
     }, []);
 
     const loadMarks = async () => {
+
+	setLoading(true);
 
         try {
 
@@ -33,6 +37,8 @@ function StudentDashboard() {
             console.log(error);
 
         }
+	
+	setLoading(false);
 
     };
 
@@ -49,6 +55,8 @@ function StudentDashboard() {
 
     });
 
+    if (loading)
+    	return <Loader />;
     return (
 
         <>

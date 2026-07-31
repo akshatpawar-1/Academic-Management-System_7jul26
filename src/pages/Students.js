@@ -5,6 +5,7 @@ import {
     updateStudent,
     deleteStudent
 } from "../services/studentService";
+import Loader from "../components/Loader";
 
 function Students() {
 
@@ -23,6 +24,8 @@ function Students() {
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState(null);
 
+    const [loading, setLoading] = useState(true);
+
     const hRollno = (event) => setRollno(event.target.value);
     const hUsername = (event) => setUsername(event.target.value);
     const hName = (event) => setName(event.target.value);
@@ -32,6 +35,8 @@ function Students() {
     const hPhoto = (event) => setPhoto(event.target.files[0]);
 
     const loadStudents = async () => {
+
+        setLoading(true);
 
         try {
 
@@ -45,6 +50,8 @@ function Students() {
             console.log(error.response?.data?.message || error.message);
 
         }
+
+        setLoading(false);
 
     };
 
@@ -66,7 +73,7 @@ function Students() {
 
         setPassword("");
         setPhoto(null);
-	photoRef.current.value = "";
+        photoRef.current.value = "";
 
         setEditing(true);
 
@@ -149,7 +156,7 @@ function Students() {
             setPassword("");
             setProgram("");
             setPhoto(null);
-	    photoRef.current.value = "";
+            photoRef.current.value = "";
 
             loadStudents();
 
@@ -171,12 +178,15 @@ function Students() {
         setPassword("");
         setProgram("");
         setPhoto(null);
-	photoRef.current.value = "";
+        photoRef.current.value = "";
 
         setEditing(false);
         setId(null);
 
     };
+
+    if (loading)
+        return <Loader />;
 
     return (
 
@@ -252,7 +262,7 @@ function Students() {
                     <br /><br />
 
                     <input
-			ref={photoRef}
+                        ref={photoRef}
                         type="file"
                         accept="image/*"
                         onChange={hPhoto}
@@ -287,8 +297,8 @@ function Students() {
                     <thead>
 
                         <tr>
-				
-			    <th>Photo</th>
+
+                            <th>Photo</th>
                             <th>Roll No</th>
                             <th>User Name</th>
                             <th>Name</th>
@@ -306,28 +316,31 @@ function Students() {
                         {students.map((student) => (
 
                             <tr key={student.id}>
-				<td>
 
-    					{
-        					student.photo ?
+                                <td>
 
-            						<img
-                						src={`http://localhost:5000/uploads/${student.photo}`}
-                						alt="Student"
-                						width="70"
-                						height="70"
-                						style={{
-                    							borderRadius: "50%",
-                    							objectFit: "cover",
-                    							cursor: "pointer"
-                						}}
-            						/>
+                                    {
+                                        student.photo ?
 
-        						:
-            							"No Photo"
-    					}
+                                            <img
+                                                src={`http://localhost:5000/uploads/${student.photo}`}
+                                                alt="Student"
+                                                width="70"
+                                                height="70"
+                                                style={{
+                                                    borderRadius: "50%",
+                                                    objectFit: "cover",
+                                                    cursor: "pointer"
+                                                }}
+                                            />
 
-				</td>
+                                            :
+
+                                            "No Photo"
+                                    }
+
+                                </td>
+
                                 <td>{student.rollno}</td>
                                 <td>{student.username}</td>
                                 <td>{student.name}</td>

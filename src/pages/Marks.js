@@ -7,6 +7,7 @@ import {
 } from "../services/markService";
 
 import { getStudents } from "../services/studentService";
+import Loader from "../components/Loader";
 
 function Marks() {
 
@@ -20,6 +21,8 @@ function Marks() {
 
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState(null);
+
+    const [loading, setLoading] = useState(true);
 
     const hStudentId = (event) => { setStudentId(event.target.value); };
     const hSubject = (event) => { setSubject(event.target.value); };
@@ -45,6 +48,8 @@ function Marks() {
 
     const loadMarks = async () => {
 
+        setLoading(true);
+
         try {
 
             const res = await getMarks();
@@ -59,6 +64,8 @@ function Marks() {
             console.log(error.response.data.message);
 
         }
+
+        setLoading(false);
 
     };
 
@@ -76,7 +83,7 @@ function Marks() {
         setStudentId(mark.student_id);
         setSubject(mark.subject);
         setMarks(mark.marks);
-	setSemester(mark.semester);
+        setSemester(mark.semester);
 
         setEditing(true);
 
@@ -117,7 +124,7 @@ function Marks() {
                 student_id,
                 subject,
                 marks,
-		semester
+                semester
 
             };
 
@@ -142,7 +149,7 @@ function Marks() {
             setStudentId("");
             setSubject("");
             setMarks("");
-	    setSemester("");
+            setSemester("");
 
             loadMarks();
 
@@ -160,12 +167,15 @@ function Marks() {
         setStudentId("");
         setSubject("");
         setMarks("");
-	setSemester("");
+        setSemester("");
 
         setEditing(false);
         setId(null);
 
     };
+
+    if (loading)
+        return <Loader />;
 
     return (
 
@@ -227,28 +237,28 @@ function Marks() {
 
                     <br /><br />
 
-		    <select
-    			value={semester}
-    			onChange={hSemester}
-    			required
-		    >
+                    <select
+                        value={semester}
+                        onChange={hSemester}
+                        required
+                    >
 
-    		    <option value="">
-        		Select Semester
-    		    </option>
+                        <option value="">
+                            Select Semester
+                        </option>
 
-   		    <option value="1">Semester 1</option>
-    		    <option value="2">Semester 2</option>
-    		    <option value="3">Semester 3</option>
-    		    <option value="4">Semester 4</option>
-    		    <option value="5">Semester 5</option>
-                    <option value="6">Semester 6</option>
-    		    <option value="7">Semester 7</option>
-    		    <option value="8">Semester 8</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
+                        <option value="7">Semester 7</option>
+                        <option value="8">Semester 8</option>
 
-		    </select>
+                    </select>
 
-		    <br /><br />
+                    <br /><br />
 
                     <div className="btn-row">
 
@@ -284,7 +294,7 @@ function Marks() {
 
                             <th>Roll No</th>
                             <th>Name</th>
-			    <th>Semester</th>
+                            <th>Semester</th>
                             <th>Subject</th>
                             <th>Marks</th>
                             <th>Edit</th>
@@ -304,7 +314,7 @@ function Marks() {
 
                                     <td>{mark.rollno}</td>
                                     <td>{mark.name}</td>
-				    <td>{mark.semester}</td>
+                                    <td>{mark.semester}</td>
                                     <td>{mark.subject}</td>
                                     <td>{mark.marks}</td>
 

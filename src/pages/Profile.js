@@ -1,8 +1,12 @@
 import { useAuth } from "../context/AuthContext";
+import Loader from "../components/Loader";
 
 function Profile() {
 
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
+
+    if (loading)
+        return <Loader />;
 
     return (
         <>
@@ -68,7 +72,6 @@ function Profile() {
             </div>
         </>
     );
-
 }
 
 export default Profile;

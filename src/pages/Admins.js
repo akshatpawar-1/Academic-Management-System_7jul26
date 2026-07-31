@@ -5,6 +5,7 @@ import {
     updateAdmin,
     deleteAdmin
 } from "../services/adminService";
+import Loader from "../components/Loader";
 
 function Admins() {
 
@@ -12,7 +13,10 @@ function Admins() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
     const [admins, setAdmins] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState(null);
 
@@ -22,6 +26,8 @@ function Admins() {
     const hPassword = (event) => { setPassword(event.target.value); };
 
     const loadAdmins = async () => {
+
+        setLoading(true);
 
         try {
 
@@ -34,9 +40,11 @@ function Admins() {
         }
         catch (error) {
 
-            console.log(error.response.data.message);
+            console.log(error.response?.data?.message || error.message);
 
         }
+
+        setLoading(false);
 
     };
 
@@ -72,7 +80,7 @@ function Admins() {
         }
         catch (error) {
 
-            console.log(error.response.data.message);
+            console.log(error.response?.data?.message || error.message);
 
         }
 
@@ -125,7 +133,7 @@ function Admins() {
         }
         catch (error) {
 
-            console.log(error.response.data.message);
+            console.log(error.response?.data?.message || error.message);
 
         }
 
@@ -133,15 +141,18 @@ function Admins() {
 
     const resetForm = () => {
 
-    	setUsername("");
-    	setName("");
-    	setEmail("");
-    	setPassword("");
+        setUsername("");
+        setName("");
+        setEmail("");
+        setPassword("");
 
-    	setEditing(false);
-    	setId(null);
+        setEditing(false);
+        setId(null);
 
     };
+
+    if (loading)
+        return <Loader />;
 
     return (
 
@@ -197,18 +208,22 @@ function Admins() {
                             </>
                         )
                     }
-		    <div className="btn-row">
-                    	<button type="submit">
-                        	{editing ? "Update Admin" : "Add Admin"}
-                    	</button>
 
-		    	<button type="button"
-				className="reset-btn"
-				onClick={resetForm}
-			>
-    				Reset
-		    	</button>
-		    </div>
+                    <div className="btn-row">
+
+                        <button type="submit">
+                            {editing ? "Update Admin" : "Add Admin"}
+                        </button>
+
+                        <button
+                            type="button"
+                            className="reset-btn"
+                            onClick={resetForm}
+                        >
+                            Reset
+                        </button>
+
+                    </div>
 
                 </form>
 
@@ -246,23 +261,27 @@ function Admins() {
                                     <td>{admin.role}</td>
 
                                     <td>
+
                                         <button
                                             type="button"
-					    className="edit-btn"
+                                            className="edit-btn"
                                             onClick={() => editAdmin(admin)}
                                         >
                                             Edit
                                         </button>
+
                                     </td>
 
                                     <td>
+
                                         <button
                                             type="button"
-					    className="delete-btn"
+                                            className="delete-btn"
                                             onClick={() => removeAdmin(admin.id)}
                                         >
                                             Delete
                                         </button>
+
                                     </td>
 
                                 </tr>
