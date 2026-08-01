@@ -166,10 +166,49 @@ const deleteMark = (req, res) => {
 
 };
 
+const getStudentSemesterReport = (req, res) => {
+
+    const { student_id, semester } = req.params;
+
+    const sql = `
+        select
+            students.rollno,
+            students.name,
+            students.program,
+            marks.subject,
+            marks.marks,
+            marks.semester
+        from marks
+        join students
+        on marks.student_id = students.id
+        where marks.student_id = ?
+        and marks.semester = ?
+        order by marks.subject ASC
+    `;
+
+    con.query(sql, [student_id, semester], (error, result) => {
+
+        if (error) {
+
+            console.log(error);
+
+            return res.status(500).json({
+                message: "Database Error"
+            });
+
+        }
+
+        res.json(result);
+
+    });
+
+};
+
 module.exports = {
     addMark,
     getMarks,
     getStudentMarks,
+    getStudentSemesterReport,
     updateMark,
     deleteMark
 };

@@ -450,3 +450,63 @@ tr:hover{
     }
 
 }
+
+/* ---------- Reports ---------- */
+
+.page form.report-card{
+    width:600px;
+}
+
+.report-card{
+    width:600px;
+    margin:30px auto;
+    padding:30px;
+}
+
+.report-row{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
+    padding:0 20px;   
+    margin-bottom:25px;
+}
+
+.report-row select{
+    width:200px;
+    padding:10px 12px;
+    font-size:16px;
+}
+
+/* ---------- Primary Button (Preview / Download) ---------- */
+
+.btn-primary{
+    background:#0f172a;
+    color:white;
+    width:200px;
+}
+
+.btn-primary:hover{
+    background:#2563eb;
+}
+
+/* ---------- PDF Preview ---------- */
+
+.pdf-preview-container{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    margin:30px 0;
+}
+
+.pdf-preview{
+    width:650px;
+    height:800px;
+
+    border:1px solid #d1d5db;
+    border-radius:12px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+    background:#fff;
+}

@@ -29,3 +29,9 @@ export const getStudentMarks = () => {
     return api.get("/marks/student");
 
 };
+
+export const getStudentSemesterReport = (student_id, semester) => {
+
+    return api.get(`/marks/report/${student_id}/${semester}`);
+
+};
