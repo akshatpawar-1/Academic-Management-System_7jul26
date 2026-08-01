@@ -37,6 +37,7 @@ Screenshots will be added after Version 1.0.
 - HTML
 - CSS
 - JavaScript
+- jsPDF
 - React Router DOM
 - Axios
 - React Toastify
