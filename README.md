@@ -6,13 +6,13 @@ This project is being developed as part of my JavaScript/MERN Full Stack learnin
 
 ---
 
-## Screenshots
+# Screenshots
 
 Screenshots will be added after Version 1.0.
 
 ---
 
-## Features
+# Features
 
 - Session-Based Authentication
 - Password Hashing using bcrypt
@@ -29,9 +29,9 @@ Screenshots will be added after Version 1.0.
 
 ---
 
-## Tech Stack
+# Tech Stack
 
-### Frontend
+## Frontend
 
 - React
 - HTML
@@ -42,7 +42,7 @@ Screenshots will be added after Version 1.0.
 - Axios
 - React Toastify
 
-### Backend
+## Backend
 
 - Node.js
 - Express.js
@@ -50,21 +50,21 @@ Screenshots will be added after Version 1.0.
 - bcrypt
 - Multer
 
-### Database
+## Database
 
 - MySQL
 
 ---
 
-## Authentication
+# Authentication
 
 This project uses Express Session Authentication instead of JWT.
 
 ---
 
-## Modules
+# Modules
 
-### Student Module
+## Student Module
 
 - Add Student
 - Edit Student
@@ -73,7 +73,7 @@ This project uses Express Session Authentication instead of JWT.
 - Upload Student Photo
 - Student Profile
 
-### Marks Module
+## Marks Module
 
 - Add Marks
 - Update Marks
@@ -82,7 +82,7 @@ This project uses Express Session Authentication instead of JWT.
 - Grade Calculation
 - Percentage Calculation
 
-### Dashboard Module
+## Dashboard Module
 
 - Admin Dashboard
 - Student Dashboard
@@ -92,22 +92,24 @@ This project uses Express Session Authentication instead of JWT.
 - Percentage Display
 - Subject-wise Marks
 
-### Reports Module
+## Reports Module
 
-- Generate PDF Report Card
-- Download Report
+- Admin Report Generation
+- Student Report Generation
+- PDF Report Card Preview
+- PDF Report Download
 
 ---
 
-## Authorization Hierarchy
+# Authorization Hierarchy
 
 - **Super Admin** → Full System Access
 - **Admin** → Student & Marks Management
-- **Student** → Personal Profile & Academic Dashboard
+- **Student** → Personal Profile, Academic Dashboard & Reports
 
 ---
 
-## Design Principles
+# Design Principles
 
 This project is being developed with a focus on:
 
@@ -119,7 +121,7 @@ This project is being developed with a focus on:
 
 ---
 
-## Learning Objectives
+# Learning Objectives
 
 - Build a production-style React application.
 - Learn Express.js with MySQL.
@@ -130,7 +132,7 @@ This project is being developed with a focus on:
 
 ---
 
-## Author
+# Author
 
 **Akshat Pawar**  
 Computer Engineering Graduate  
@@ -138,21 +140,21 @@ Mumbai, Maharashtra, India
 
 ---
 
-## Status
+# Status
 
-Currently Under Development
+**Currently Under Development**
 
-### Completed
+## Completed
 
 - Session-Based Authentication
 - Role-Based Authorization
+- Protected & Guest Routes
 - Admin CRUD
 - Student CRUD
 - Marks CRUD
 - Semester-wise Marks Management
 - Student Login
 - Student Password Hashing
-- Protected & Guest Routes
 - Student Profile Page
 - Student Photo Upload & Display
 - Student Profile Photo Management
@@ -160,10 +162,15 @@ Currently Under Development
 - Admin Dashboard
 - Grade Calculator Utility
 - Percentage Calculator Utility
-
-### Upcoming
-
 - Reports Module
+- Admin Reports Page
+- Student Reports Page
+- PDF Report Card Generation
+- PDF Report Preview
+- PDF Report Download
+
+## Upcoming
+
 - Search & Filters
 - Dashboard Analytics
 - Email Notifications
