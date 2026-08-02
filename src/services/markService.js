@@ -35,3 +35,7 @@ export const getStudentSemesterReport = (student_id, semester) => {
     return api.get(`/marks/report/${student_id}/${semester}`);
 
 };
+
+export const getMySemesterReport = (semester) => {
+    return api.get(`/marks/student/report/${semester}`);
+};

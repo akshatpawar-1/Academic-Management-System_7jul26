@@ -11,6 +11,7 @@ const {
     getMarks,
     getStudentMarks,
     getStudentSemesterReport,
+    getMySemesterReport,
     updateMark,
     deleteMark
 } = require("../controllers/markController");
@@ -39,6 +40,12 @@ router.get(
     isAuthenticated,
     isAdmin,
     getStudentSemesterReport
+);
+
+router.get(
+    "/student/report/:semester",
+    isAuthenticated,
+    getMySemesterReport
 );
 
 router.put(

@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 import Admins from "./pages/Admins";
 import Logout from "./pages/Logout";
 import StudentDashboard from "./pages/StudentDashboard";
+import StudentReports from "./pages/StudentReports";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import GuestRoute from "./components/GuestRoute";
@@ -118,6 +119,15 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
+
+		    <Route
+    			path={ROUTES.STUDENT_REPORTS}
+    			element={
+			    <ProtectedRoute roles={["student"]}>
+				<StudentReports />
+			    </ProtectedRoute>
+			}
+		    />	
 
                     <Route
                         path="*"

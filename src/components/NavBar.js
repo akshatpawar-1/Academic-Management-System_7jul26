@@ -32,6 +32,7 @@ function Navbar() {
                     user.role === "student" &&
                     <>
                         <Link to={ROUTES.STUDENT_DASHBOARD}>Dashboard</Link>
+			<Link to={ROUTES.STUDENT_REPORTS}>My Reports</Link>
                     </>
                 }
 

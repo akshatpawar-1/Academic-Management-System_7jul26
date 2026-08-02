@@ -166,6 +166,7 @@ const deleteMark = (req, res) => {
 
 };
 
+//used by admin reports
 const getStudentSemesterReport = (req, res) => {
 
     const { student_id, semester } = req.params;
@@ -204,11 +205,52 @@ const getStudentSemesterReport = (req, res) => {
 
 };
 
+//used by student reports
+const getMySemesterReport = (req, res) => {
+
+    const student_id = req.session.user.id;
+    const { semester } = req.params;
+
+    const sql = `
+        SELECT
+            students.rollno,
+            students.name,
+            students.program,
+            marks.subject,
+            marks.marks,
+            marks.semester
+        FROM marks
+        JOIN students
+        ON marks.student_id = students.id
+        WHERE marks.student_id = ?
+        AND marks.semester = ?
+        ORDER BY marks.subject ASC
+    `;
+
+    con.query(sql, [student_id, semester], (error, result) => {
+
+        if (error) {
+
+            console.log(error);
+
+            return res.status(500).json({
+                message: "Database Error"
+            });
+
+        }
+
+        res.json(result);
+
+    });
+
+};
+
 module.exports = {
     addMark,
     getMarks,
     getStudentMarks,
     getStudentSemesterReport,
+    getMySemesterReport,
     updateMark,
     deleteMark
 };
