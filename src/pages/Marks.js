@@ -8,6 +8,7 @@ import {
 
 import { getStudents } from "../services/studentService";
 import Loader from "../components/Loader";
+import { FiSearch } from "react-icons/fi";
 
 function Marks() {
 
@@ -23,11 +24,13 @@ function Marks() {
     const [id, setId] = useState(null);
 
     const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState("");
 
     const hStudentId = (event) => { setStudentId(event.target.value); };
     const hSubject = (event) => { setSubject(event.target.value); };
     const hMarks = (event) => { setMarks(event.target.value); };
     const hSemester = (event) => { setSemester(event.target.value); };
+    const hSearch = (event) =>{ setSearch(event.target.value); };
 
     const loadStudents = async () => {
 
@@ -174,6 +177,12 @@ function Marks() {
 
     };
 
+    const filteredallMarks = allMarks.filter((m) =>
+    	m.rollno.toLowerCase().includes(search.toLowerCase()) ||
+    	m.name.toLowerCase().includes(search.toLowerCase()) ||
+    	m.subject.toLowerCase().includes(search.toLowerCase())
+    );
+
     if (loading)
         return <Loader />;
 
@@ -286,6 +295,20 @@ function Marks() {
 
                 <h2>All Marks</h2>
 
+		<div className="search-container">
+
+    			<FiSearch className="search-icon" />
+
+    			<input
+        			type="text"
+        			className="search-box"
+        			placeholder="Search by Roll No Name or Subject..."
+        			value={search}
+        			onChange={hSearch}
+    			/>
+
+		</div>
+
                 <table border="1" cellPadding="10">
 
                     <thead>
@@ -308,7 +331,7 @@ function Marks() {
 
                         {
 
-                            allMarks.map((mark) => (
+                            filteredallMarks.map((mark) => (
 
                                 <tr key={mark.id}>
 

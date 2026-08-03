@@ -6,6 +6,7 @@ import {
     deleteStudent
 } from "../services/studentService";
 import Loader from "../components/Loader";
+import { FiSearch } from "react-icons/fi";
 
 function Students() {
 
@@ -18,6 +19,7 @@ function Students() {
     const [password, setPassword] = useState("");
     const [program, setProgram] = useState("");
     const [photo, setPhoto] = useState(null);
+    const [search, setSearch] = useState("");
 
     const [students, setStudents] = useState([]);
 
@@ -33,6 +35,7 @@ function Students() {
     const hPassword = (event) => setPassword(event.target.value);
     const hProgram = (event) => setProgram(event.target.value);
     const hPhoto = (event) => setPhoto(event.target.files[0]);
+    const hSearch = (event) => setSearch(event.target.value);
 
     const loadStudents = async () => {
 
@@ -185,9 +188,14 @@ function Students() {
 
     };
 
+    const filteredStudents = students.filter((s) =>
+    	s.rollno.toLowerCase().includes(search.toLowerCase()) ||
+    	s.name.toLowerCase().includes(search.toLowerCase())
+    );
+
     if (loading)
         return <Loader />;
-
+    
     return (
 
         <>
@@ -292,6 +300,20 @@ function Students() {
 
                 <h2>All Students</h2>
 
+		<div className="search-container">
+
+    			<FiSearch className="search-icon" />
+
+    			<input
+        			type="text"
+        			className="search-box"
+        			placeholder="Search by Roll No or Name..."
+        			value={search}
+        			onChange={hSearch}
+    			/>
+
+		</div>
+
                 <table border="1" cellPadding="10">
 
                     <thead>
@@ -313,7 +335,7 @@ function Students() {
 
                     <tbody>
 
-                        {students.map((student) => (
+                        {filteredStudents.map((student) => (
 
                             <tr key={student.id}>
 

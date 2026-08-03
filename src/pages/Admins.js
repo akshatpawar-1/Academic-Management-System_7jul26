@@ -6,6 +6,7 @@ import {
     deleteAdmin
 } from "../services/adminService";
 import Loader from "../components/Loader";
+import { FiSearch } from "react-icons/fi";
 
 function Admins() {
 
@@ -13,17 +14,20 @@ function Admins() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [search, setSearch] = useState("");
 
     const [admins, setAdmins] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState(null);
+    
 
     const hUsername = (event) => { setUsername(event.target.value); };
     const hName = (event) => { setName(event.target.value); };
     const hEmail = (event) => { setEmail(event.target.value); };
     const hPassword = (event) => { setPassword(event.target.value); };
+    const hSearch = (event) =>{ setSearch(event.target.value); };
 
     const loadAdmins = async () => {
 
@@ -151,6 +155,12 @@ function Admins() {
 
     };
 
+    const filteredAdmins = admins.filter((a) =>
+    	a.username.toLowerCase().includes(search.toLowerCase()) ||
+    	a.name.toLowerCase().includes(search.toLowerCase()) ||
+    	a.email.toLowerCase().includes(search.toLowerCase())
+    );
+
     if (loading)
         return <Loader />;
 
@@ -231,6 +241,20 @@ function Admins() {
 
                 <h2>All Admins</h2>
 
+		<div className="search-container">
+
+    			<FiSearch className="search-icon" />
+
+    			<input
+        			type="text"
+        			className="search-box"
+        			placeholder="Search by Name Username or Email..."
+        			value={search}
+        			onChange={hSearch}
+    			/>
+
+		</div>
+
                 <table border="1" cellPadding="10">
 
                     <thead>
@@ -251,7 +275,7 @@ function Admins() {
                     <tbody>
 
                         {
-                            admins.map((admin) => (
+                            filteredAdmins.map((admin) => (
 
                                 <tr key={admin.id}>
 
