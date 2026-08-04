@@ -24,7 +24,7 @@ Screenshots will be added after Version 1.0.
 - Student Photo Upload & Display
 - Academic Reports
 - PDF Report Card Generation
-- Student Search
+- Search & Filters
 - Responsive User Interface
 
 ---
@@ -72,6 +72,7 @@ This project uses Express Session Authentication instead of JWT.
 - View Students
 - Upload Student Photo
 - Student Profile
+- Search Students
 
 ## Marks Module
 
@@ -81,6 +82,7 @@ This project uses Express Session Authentication instead of JWT.
 - Semester-wise Marks
 - Grade Calculation
 - Percentage Calculation
+- Search Marks
 
 ## Dashboard Module
 
@@ -98,6 +100,11 @@ This project uses Express Session Authentication instead of JWT.
 - Student Report Generation
 - PDF Report Card Preview
 - PDF Report Download
+
+## Admin Module
+
+- Admin CRUD
+- Search Admins
 
 ---
 
@@ -168,10 +175,10 @@ Mumbai, Maharashtra, India
 - PDF Report Card Generation
 - PDF Report Preview
 - PDF Report Download
+- Search & Filters (Students, Marks & Admins)
 
 ## Upcoming
 
-- Search & Filters
 - Dashboard Analytics
 - Email Notifications
 - UI/UX Improvements
