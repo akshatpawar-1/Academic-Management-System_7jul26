@@ -24,6 +24,9 @@ Screenshots will be added after Version 1.0.
 - Student Photo Upload & Display
 - Academic Reports
 - PDF Report Card Generation
+- React PDF.js Report Preview
+- PDF Zoom Controls
+- PDF Download
 - Search & Filters
 - Responsive User Interface
 
@@ -37,6 +40,7 @@ Screenshots will be added after Version 1.0.
 - HTML
 - CSS
 - JavaScript
+- React PDF (PDF.js)
 - jsPDF
 - React Router DOM
 - Axios
@@ -98,7 +102,8 @@ This project uses Express Session Authentication instead of JWT.
 
 - Admin Report Generation
 - Student Report Generation
-- PDF Report Card Preview
+- React PDF.js Report Preview
+- PDF Zoom Controls
 - PDF Report Download
 
 ## Admin Module
@@ -173,7 +178,8 @@ Mumbai, Maharashtra, India
 - Admin Reports Page
 - Student Reports Page
 - PDF Report Card Generation
-- PDF Report Preview
+- React PDF.js Report Preview
+- PDF Zoom Controls
 - PDF Report Download
 - Search & Filters (Students, Marks & Admins)
 
