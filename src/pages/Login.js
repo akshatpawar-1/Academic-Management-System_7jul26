@@ -1,101 +1,92 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { login } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
+import { validateLogin } from "../utils/validation";
 
 function Login() {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const { loadUser } = useAuth();
 
-    const { loadUser } = useAuth();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+  const hUsername = (event) => {
+    setUsername(event.target.value);
+  };
 
-    const hUsername = (event) => { setUsername(event.target.value); };
-    const hPassword = (event) => { setPassword(event.target.value); };
+  const hPassword = (event) => {
+    setPassword(event.target.value);
+  };
 
-    const loginUser = async (event) => {
+  const loginUser = async (event) => {
+    event.preventDefault();
 
-        event.preventDefault();
+    const error = validateLogin({ username, password });
 
-        try {
+    if (error) {
+      toast.error(error);
+      return;
+    }
 
-            const data = {
-                username,
-                password
-            };
+    try {
+      const data = {
+        username,
+        password,
+      };
 
-            const res = await login(data);
+      const res = await login(data);
 
-            console.log(res.data);
+      await loadUser();
 
-            await loadUser();
+      setUsername("");
+      setPassword("");
 
-            setUsername("");
-            setPassword("");
+      if (res.data.user.role === "student") {
+        navigate("/student-dashboard");
+      } else {
+        localStorage.setItem("showWelcome", "true");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      if (error.response) toast.error(error.response.data.message);
+      else toast.error("Server Not Running");
+    }
+  };
 
-            if (res.data.user.role === "student"){
-                navigate("/student-dashboard");
-	    }
-            else{
+  return (
+    <>
+      <div className="page">
+        <h1>Login</h1>
 
-		localStorage.setItem("showWelcome", "true");
-                navigate("/dashboard");
-	    }
+        <form onSubmit={loginUser}>
+          <input
+            type="text"
+            placeholder="Enter Username"
+            value={username}
+            onChange={hUsername}
+          />
 
-        }
-        catch (error) {
+          <br />
+          <br />
 
-            if (error.response)
-                console.log(error.response.data.message);
-            else
-                console.log("Server Not Running");
+          <input
+            type="password"
+            placeholder="Enter Password"
+            value={password}
+            onChange={hPassword}
+          />
 
-        }
+          <br />
+          <br />
 
-    };
-
-    return (
-
-        <>
-            <div className="page">
-
-                <h1>Login</h1>
-
-                <form onSubmit={loginUser}>
-
-                    <input
-                        type="text"
-                        placeholder="Enter Username"
-                        value={username}
-                        onChange={hUsername}
-                        required
-                    />
-
-                    <br /><br />
-
-                    <input
-                        type="password"
-                        placeholder="Enter Password"
-                        value={password}
-                        onChange={hPassword}
-                        required
-                    />
-
-                    <br /><br />
-
-                    <button type="submit">
-                        Login
-                    </button>
-
-                </form>
-
-            </div>
-        </>
-
-    );
-
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    </>
+  );
 }
 
 export default Login;

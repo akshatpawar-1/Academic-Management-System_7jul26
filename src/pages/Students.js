@@ -1,411 +1,349 @@
 import { useState, useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 import {
-    addStudent as saveStudent,
-    getStudents,
-    updateStudent,
-    deleteStudent
+  addStudent as saveStudent,
+  getStudents,
+  updateStudent,
+  deleteStudent,
 } from "../services/studentService";
 import Loader from "../components/Loader";
 import { FiSearch } from "react-icons/fi";
+import { validateStudent } from "../utils/validation";
 
 function Students() {
+  const photoRef = useRef();
 
-    const photoRef = useRef();
+  const [rollno, setRollno] = useState("");
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [program, setProgram] = useState("");
+  const [photo, setPhoto] = useState(null);
+  const [search, setSearch] = useState("");
 
-    const [rollno, setRollno] = useState("");
-    const [username, setUsername] = useState("");
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [program, setProgram] = useState("");
-    const [photo, setPhoto] = useState(null);
-    const [search, setSearch] = useState("");
+  const [students, setStudents] = useState([]);
 
-    const [students, setStudents] = useState([]);
+  const [editing, setEditing] = useState(false);
+  const [id, setId] = useState(null);
 
-    const [editing, setEditing] = useState(false);
-    const [id, setId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const [loading, setLoading] = useState(true);
+  const hRollno = (event) => setRollno(event.target.value);
+  const hUsername = (event) => setUsername(event.target.value);
+  const hName = (event) => setName(event.target.value);
+  const hEmail = (event) => setEmail(event.target.value);
+  const hPassword = (event) => setPassword(event.target.value);
+  const hProgram = (event) => setProgram(event.target.value);
+  const hPhoto = (event) => setPhoto(event.target.files[0]);
+  const hSearch = (event) => setSearch(event.target.value);
 
-    const hRollno = (event) => setRollno(event.target.value);
-    const hUsername = (event) => setUsername(event.target.value);
-    const hName = (event) => setName(event.target.value);
-    const hEmail = (event) => setEmail(event.target.value);
-    const hPassword = (event) => setPassword(event.target.value);
-    const hProgram = (event) => setProgram(event.target.value);
-    const hPhoto = (event) => setPhoto(event.target.files[0]);
-    const hSearch = (event) => setSearch(event.target.value);
+  const loadStudents = async () => {
+    setLoading(true);
 
-    const loadStudents = async () => {
+    try {
+      const res = await getStudents();
 
-        setLoading(true);
+      setStudents(res.data);
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
 
-        try {
+    setLoading(false);
+  };
 
-            const res = await getStudents();
+  useEffect(() => {
+    loadStudents();
+  }, []);
 
-            setStudents(res.data);
+  const editStudent = (student) => {
+    setId(student.id);
 
-        }
-        catch (error) {
+    setRollno(student.rollno);
+    setUsername(student.username);
+    setName(student.name);
+    setEmail(student.email);
+    setProgram(student.program);
 
-            console.log(error.response?.data?.message || error.message);
+    setPassword("");
+    setPhoto(null);
+    photoRef.current.value = "";
 
-        }
+    setEditing(true);
+  };
 
-        setLoading(false);
+  const removeStudent = async (id) => {
+    const ans = window.confirm(
+      "Are you sure you want to delete this Student?"
+    );
 
-    };
+    if (!ans) return;
 
-    useEffect(() => {
+    try {
+      const res = await deleteStudent(id);
 
-        loadStudents();
+      toast.success(res.data.message);
 
-    }, []);
+      loadStudents();
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
 
-    const editStudent = (student) => {
+  const saveStudentData = async (event) => {
+    event.preventDefault();
 
-        setId(student.id);
+    const error = validateStudent(
+      { rollno, username, name, email, password, program, photo },
+      editing
+    );
 
-        setRollno(student.rollno);
-        setUsername(student.username);
-        setName(student.name);
-        setEmail(student.email);
-        setProgram(student.program);
+    if (error) {
+      toast.error(error);
+      return;
+    }
 
-        setPassword("");
-        setPhoto(null);
-        photoRef.current.value = "";
+    try {
+      const data = new FormData();
 
-        setEditing(true);
+      data.append("rollno", rollno);
+      data.append("username", username);
+      data.append("name", name);
+      data.append("email", email);
+      data.append("program", program);
 
-    };
+      if (!editing) {
+        data.append("password", password);
+      }
 
-    const removeStudent = async (id) => {
+      if (photo) {
+        data.append("photo", photo);
+      }
 
-        const ans = window.confirm(
-            "Are you sure you want to delete this Student?"
-        );
+      let res;
 
-        if (!ans)
-            return;
-
-        try {
-
-            const res = await deleteStudent(id);
-
-            console.log(res.data);
-
-            loadStudents();
-
-        }
-        catch (error) {
-
-            console.log(error.response?.data?.message || error.message);
-
-        }
-
-    };
-
-    const saveStudentData = async (event) => {
-
-        event.preventDefault();
-
-        try {
-
-            const data = new FormData();
-
-            data.append("rollno", rollno);
-            data.append("username", username);
-            data.append("name", name);
-            data.append("email", email);
-            data.append("program", program);
-
-            if (!editing) {
-
-                data.append("password", password);
-
-            }
-
-            if (photo) {
-
-                data.append("photo", photo);
-
-            }
-
-            let res;
-
-            if (editing) {
-
-                res = await updateStudent(id, data);
-
-                setEditing(false);
-                setId(null);
-
-            }
-            else {
-
-                res = await saveStudent(data);
-
-            }
-
-            console.log(res.data);
-
-            setRollno("");
-            setUsername("");
-            setName("");
-            setEmail("");
-            setPassword("");
-            setProgram("");
-            setPhoto(null);
-            photoRef.current.value = "";
-
-            loadStudents();
-
-        }
-        catch (error) {
-
-            console.log(error.response?.data?.message || error.message);
-
-        }
-
-    };
-
-    const resetForm = () => {
-
-        setRollno("");
-        setUsername("");
-        setName("");
-        setEmail("");
-        setPassword("");
-        setProgram("");
-        setPhoto(null);
-        photoRef.current.value = "";
+      if (editing) {
+        res = await updateStudent(id, data);
 
         setEditing(false);
         setId(null);
+      } else {
+        res = await saveStudent(data);
+      }
 
-    };
+      toast.success(res.data.message);
 
-    const filteredStudents = students.filter((s) =>
-    	s.rollno.toLowerCase().includes(search.toLowerCase()) ||
-    	s.name.toLowerCase().includes(search.toLowerCase())
-    );
+      setRollno("");
+      setUsername("");
+      setName("");
+      setEmail("");
+      setPassword("");
+      setProgram("");
+      setPhoto(null);
+      photoRef.current.value = "";
 
-    if (loading)
-        return <Loader />;
-    
-    return (
+      loadStudents();
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
 
-        <>
-            <div className="page">
+  const resetForm = () => {
+    setRollno("");
+    setUsername("");
+    setName("");
+    setEmail("");
+    setPassword("");
+    setProgram("");
+    setPhoto(null);
+    photoRef.current.value = "";
 
-                <h1>Student Management</h1>
+    setEditing(false);
+    setId(null);
+  };
 
-                <form onSubmit={saveStudentData}>
+  const filteredStudents = students.filter(
+    (s) =>
+      s.rollno.toLowerCase().includes(search.toLowerCase()) ||
+      s.name.toLowerCase().includes(search.toLowerCase())
+  );
 
-                    <input
-                        type="text"
-                        placeholder="Enter Roll No"
-                        value={rollno}
-                        onChange={hRollno}
-                        required
+  if (loading) return <Loader />;
+
+  return (
+    <>
+      <div className="page">
+        <h1>Student Management</h1>
+
+        <form onSubmit={saveStudentData}>
+          <input
+            type="text"
+            placeholder="Enter Roll No"
+            value={rollno}
+            onChange={hRollno}
+          />
+
+          <br />
+          <br />
+
+          <input
+            type="text"
+            placeholder="Enter Username"
+            value={username}
+            onChange={hUsername}
+          />
+
+          <br />
+          <br />
+
+          <input
+            type="text"
+            placeholder="Enter Name"
+            value={name}
+            onChange={hName}
+          />
+
+          <br />
+          <br />
+
+          <input
+            type="email"
+            placeholder="Enter Email"
+            value={email}
+            onChange={hEmail}
+          />
+
+          <br />
+          <br />
+
+          {!editing && (
+            <>
+              <input
+                type="password"
+                placeholder="Enter Password"
+                value={password}
+                onChange={hPassword}
+              />
+
+              <br />
+              <br />
+            </>
+          )}
+
+          <input
+            type="text"
+            placeholder="Enter Program"
+            value={program}
+            onChange={hProgram}
+          />
+
+          <br />
+          <br />
+
+          <input
+            ref={photoRef}
+            type="file"
+            accept="image/*"
+            onChange={hPhoto}
+          />
+
+          <br />
+          <br />
+
+          <div className="btn-row">
+            <button type="submit">
+              {editing ? "Update Student" : "Add Student"}
+            </button>
+
+            <button type="button" className="reset-btn" onClick={resetForm}>
+              Reset
+            </button>
+          </div>
+        </form>
+
+        <hr />
+
+        <h2>All Students</h2>
+
+        <div className="search-container">
+          <FiSearch className="search-icon" />
+
+          <input
+            type="text"
+            className="search-box"
+            placeholder="Search by Roll No or Name..."
+            value={search}
+            onChange={hSearch}
+          />
+        </div>
+
+        <table border="1" cellPadding="10">
+          <thead>
+            <tr>
+              <th>Photo</th>
+              <th>Roll No</th>
+              <th>User Name</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Program</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {filteredStudents.map((student) => (
+              <tr key={student.id}>
+                <td>
+                  {student.photo ? (
+                    <img
+                      src={`http://localhost:5000/uploads/${student.photo}`}
+                      alt="Student"
+                      width="70"
+                      height="70"
+                      style={{
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        cursor: "pointer",
+                      }}
                     />
+                  ) : (
+                    "No Photo"
+                  )}
+                </td>
 
-                    <br /><br />
+                <td>{student.rollno}</td>
+                <td>{student.username}</td>
+                <td>{student.name}</td>
+                <td>{student.email}</td>
+                <td>{student.program}</td>
 
-                    <input
-                        type="text"
-                        placeholder="Enter Username"
-                        value={username}
-                        onChange={hUsername}
-                        required
-                    />
+                <td>
+                  <button
+                    type="button"
+                    className="edit-btn"
+                    onClick={() => editStudent(student)}
+                  >
+                    Edit
+                  </button>
+                </td>
 
-                    <br /><br />
-
-                    <input
-                        type="text"
-                        placeholder="Enter Name"
-                        value={name}
-                        onChange={hName}
-                        required
-                    />
-
-                    <br /><br />
-
-                    <input
-                        type="email"
-                        placeholder="Enter Email"
-                        value={email}
-                        onChange={hEmail}
-                        required
-                    />
-
-                    <br /><br />
-
-                    {!editing && (
-                        <>
-                            <input
-                                type="password"
-                                placeholder="Enter Password"
-                                value={password}
-                                onChange={hPassword}
-                                required
-                            />
-
-                            <br /><br />
-                        </>
-                    )}
-
-                    <input
-                        type="text"
-                        placeholder="Enter Program"
-                        value={program}
-                        onChange={hProgram}
-                        required
-                    />
-
-                    <br /><br />
-
-                    <input
-                        ref={photoRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={hPhoto}
-                    />
-
-                    <br /><br />
-
-                    <div className="btn-row">
-
-                        <button type="submit">
-                            {editing ? "Update Student" : "Add Student"}
-                        </button>
-
-                        <button
-                            type="button"
-                            className="reset-btn"
-                            onClick={resetForm}
-                        >
-                            Reset
-                        </button>
-
-                    </div>
-
-                </form>
-
-                <hr />
-
-                <h2>All Students</h2>
-
-		<div className="search-container">
-
-    			<FiSearch className="search-icon" />
-
-    			<input
-        			type="text"
-        			className="search-box"
-        			placeholder="Search by Roll No or Name..."
-        			value={search}
-        			onChange={hSearch}
-    			/>
-
-		</div>
-
-                <table border="1" cellPadding="10">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Photo</th>
-                            <th>Roll No</th>
-                            <th>User Name</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Program</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        {filteredStudents.map((student) => (
-
-                            <tr key={student.id}>
-
-                                <td>
-
-                                    {
-                                        student.photo ?
-
-                                            <img
-                                                src={`http://localhost:5000/uploads/${student.photo}`}
-                                                alt="Student"
-                                                width="70"
-                                                height="70"
-                                                style={{
-                                                    borderRadius: "50%",
-                                                    objectFit: "cover",
-                                                    cursor: "pointer"
-                                                }}
-                                            />
-
-                                            :
-
-                                            "No Photo"
-                                    }
-
-                                </td>
-
-                                <td>{student.rollno}</td>
-                                <td>{student.username}</td>
-                                <td>{student.name}</td>
-                                <td>{student.email}</td>
-                                <td>{student.program}</td>
-
-                                <td>
-
-                                    <button
-                                        type="button"
-                                        className="edit-btn"
-                                        onClick={() => editStudent(student)}
-                                    >
-                                        Edit
-                                    </button>
-
-                                </td>
-
-                                <td>
-
-                                    <button
-                                        type="button"
-                                        className="delete-btn"
-                                        onClick={() => removeStudent(student.id)}
-                                    >
-                                        Delete
-                                    </button>
-
-                                </td>
-
-                            </tr>
-
-                        ))}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-        </>
-
-    );
-
+                <td>
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeStudent(student.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
 }
 
 export default Students;

@@ -1,327 +1,274 @@
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import {
-    addAdmin as saveAdmin,
-    getAdmin,
-    updateAdmin,
-    deleteAdmin
+  addAdmin as saveAdmin,
+  getAdmin,
+  updateAdmin,
+  deleteAdmin,
 } from "../services/adminService";
 import Loader from "../components/Loader";
 import { FiSearch } from "react-icons/fi";
+import { validateAdmin } from "../utils/validation";
 
 function Admins() {
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [search, setSearch] = useState("");
 
-    const [username, setUsername] = useState("");
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [search, setSearch] = useState("");
+  const [admins, setAdmins] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const [admins, setAdmins] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [id, setId] = useState(null);
 
-    const [editing, setEditing] = useState(false);
-    const [id, setId] = useState(null);
-    
+  const hUsername = (event) => {
+    setUsername(event.target.value);
+  };
+  const hName = (event) => {
+    setName(event.target.value);
+  };
+  const hEmail = (event) => {
+    setEmail(event.target.value);
+  };
+  const hPassword = (event) => {
+    setPassword(event.target.value);
+  };
+  const hSearch = (event) => {
+    setSearch(event.target.value);
+  };
 
-    const hUsername = (event) => { setUsername(event.target.value); };
-    const hName = (event) => { setName(event.target.value); };
-    const hEmail = (event) => { setEmail(event.target.value); };
-    const hPassword = (event) => { setPassword(event.target.value); };
-    const hSearch = (event) =>{ setSearch(event.target.value); };
+  const loadAdmins = async () => {
+    setLoading(true);
 
-    const loadAdmins = async () => {
+    try {
+      const res = await getAdmin();
 
-        setLoading(true);
+      setAdmins(res.data);
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
 
-        try {
+    setLoading(false);
+  };
 
-            const res = await getAdmin();
+  const editAdmin = (admin) => {
+    setId(admin.id);
 
-            console.log(res.data);
+    setUsername(admin.username);
+    setName(admin.name);
+    setEmail(admin.email);
 
-            setAdmins(res.data);
+    setPassword("");
 
-        }
-        catch (error) {
+    setEditing(true);
+  };
 
-            console.log(error.response?.data?.message || error.message);
+  const removeAdmin = async (id) => {
+    const ans = window.confirm("Are you sure you want to delete this admin?");
 
-        }
+    if (!ans) return;
 
-        setLoading(false);
+    try {
+      const res = await deleteAdmin(id);
 
-    };
+      toast.success(res.data.message);
 
-    const editAdmin = (admin) => {
+      loadAdmins();
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
 
-        setId(admin.id);
+  useEffect(() => {
+    loadAdmins();
+  }, []);
 
-        setUsername(admin.username);
-        setName(admin.name);
-        setEmail(admin.email);
+  const saveAdminData = async (event) => {
+    event.preventDefault();
 
-        setPassword("");
+    const error = validateAdmin({ username, name, email, password }, editing);
 
-        setEditing(true);
+    if (error) {
+      toast.error(error);
+      return;
+    }
 
-    };
+    try {
+      const data = {
+        username,
+        name,
+        email,
+        password,
+      };
 
-    const removeAdmin = async (id) => {
+      let res;
 
-        const ans = window.confirm("Are you sure you want to delete this admin?");
-
-        if (!ans)
-            return;
-
-        try {
-
-            const res = await deleteAdmin(id);
-
-            console.log(res.data);
-
-            loadAdmins();
-
-        }
-        catch (error) {
-
-            console.log(error.response?.data?.message || error.message);
-
-        }
-
-    };
-
-    useEffect(() => {
-
-        loadAdmins();
-
-    }, []);
-
-    const saveAdminData = async (event) => {
-
-        event.preventDefault();
-
-        try {
-
-            const data = {
-                username,
-                name,
-                email,
-                password
-            };
-
-            let res;
-
-            if (editing) {
-
-                res = await updateAdmin(id, data);
-
-                setEditing(false);
-                setId(null);
-
-            }
-            else {
-
-                res = await saveAdmin(data);
-
-            }
-
-            console.log(res.data);
-
-            setUsername("");
-            setName("");
-            setEmail("");
-            setPassword("");
-
-            loadAdmins();
-
-        }
-        catch (error) {
-
-            console.log(error.response?.data?.message || error.message);
-
-        }
-
-    };
-
-    const resetForm = () => {
-
-        setUsername("");
-        setName("");
-        setEmail("");
-        setPassword("");
+      if (editing) {
+        res = await updateAdmin(id, data);
 
         setEditing(false);
         setId(null);
+      } else {
+        res = await saveAdmin(data);
+      }
 
-    };
+      toast.success(res.data.message);
 
-    const filteredAdmins = admins.filter((a) =>
-    	a.username.toLowerCase().includes(search.toLowerCase()) ||
-    	a.name.toLowerCase().includes(search.toLowerCase()) ||
-    	a.email.toLowerCase().includes(search.toLowerCase())
-    );
+      setUsername("");
+      setName("");
+      setEmail("");
+      setPassword("");
 
-    if (loading)
-        return <Loader />;
+      loadAdmins();
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
 
-    return (
+  const resetForm = () => {
+    setUsername("");
+    setName("");
+    setEmail("");
+    setPassword("");
 
-        <>
-            <div className="page">
+    setEditing(false);
+    setId(null);
+  };
 
-                <h1>Admin Management</h1>
+  const filteredAdmins = admins.filter(
+    (a) =>
+      a.username.toLowerCase().includes(search.toLowerCase()) ||
+      a.name.toLowerCase().includes(search.toLowerCase()) ||
+      a.email.toLowerCase().includes(search.toLowerCase())
+  );
 
-                <form onSubmit={saveAdminData}>
+  if (loading) return <Loader />;
 
-                    <input
-                        type="text"
-                        placeholder="Enter Username"
-                        value={username}
-                        onChange={hUsername}
-                        required
-                    />
+  return (
+    <>
+      <div className="page">
+        <h1>Admin Management</h1>
 
-                    <br /><br />
+        <form onSubmit={saveAdminData}>
+          <input
+            type="text"
+            placeholder="Enter Username"
+            value={username}
+            onChange={hUsername}
+          />
 
-                    <input
-                        type="text"
-                        placeholder="Enter Name"
-                        value={name}
-                        onChange={hName}
-                        required
-                    />
+          <br />
+          <br />
 
-                    <br /><br />
+          <input
+            type="text"
+            placeholder="Enter Name"
+            value={name}
+            onChange={hName}
+          />
 
-                    <input
-                        type="email"
-                        placeholder="Enter Email"
-                        value={email}
-                        onChange={hEmail}
-                        required
-                    />
+          <br />
+          <br />
 
-                    <br /><br />
+          <input
+            type="email"
+            placeholder="Enter Email"
+            value={email}
+            onChange={hEmail}
+          />
 
-                    {
-                        !editing && (
-                            <>
-                                <input
-                                    type="password"
-                                    placeholder="Enter Password"
-                                    value={password}
-                                    onChange={hPassword}
-                                    required
-                                />
+          <br />
+          <br />
 
-                                <br /><br />
-                            </>
-                        )
-                    }
+          {!editing && (
+            <>
+              <input
+                type="password"
+                placeholder="Enter Password"
+                value={password}
+                onChange={hPassword}
+              />
 
-                    <div className="btn-row">
+              <br />
+              <br />
+            </>
+          )}
 
-                        <button type="submit">
-                            {editing ? "Update Admin" : "Add Admin"}
-                        </button>
+          <div className="btn-row">
+            <button type="submit">
+              {editing ? "Update Admin" : "Add Admin"}
+            </button>
 
-                        <button
-                            type="button"
-                            className="reset-btn"
-                            onClick={resetForm}
-                        >
-                            Reset
-                        </button>
+            <button type="button" className="reset-btn" onClick={resetForm}>
+              Reset
+            </button>
+          </div>
+        </form>
 
-                    </div>
+        <hr />
 
-                </form>
+        <h2>All Admins</h2>
 
-                <hr />
+        <div className="search-container">
+          <FiSearch className="search-icon" />
 
-                <h2>All Admins</h2>
+          <input
+            type="text"
+            className="search-box"
+            placeholder="Search by Name Username or Email..."
+            value={search}
+            onChange={hSearch}
+          />
+        </div>
 
-		<div className="search-container">
+        <table border="1" cellPadding="10">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
 
-    			<FiSearch className="search-icon" />
+          <tbody>
+            {filteredAdmins.map((admin) => (
+              <tr key={admin.id}>
+                <td>{admin.username}</td>
+                <td>{admin.name}</td>
+                <td>{admin.email}</td>
+                <td>{admin.role}</td>
 
-    			<input
-        			type="text"
-        			className="search-box"
-        			placeholder="Search by Name Username or Email..."
-        			value={search}
-        			onChange={hSearch}
-    			/>
+                <td>
+                  <button
+                    type="button"
+                    className="edit-btn"
+                    onClick={() => editAdmin(admin)}
+                  >
+                    Edit
+                  </button>
+                </td>
 
-		</div>
-
-                <table border="1" cellPadding="10">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Username</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        {
-                            filteredAdmins.map((admin) => (
-
-                                <tr key={admin.id}>
-
-                                    <td>{admin.username}</td>
-                                    <td>{admin.name}</td>
-                                    <td>{admin.email}</td>
-                                    <td>{admin.role}</td>
-
-                                    <td>
-
-                                        <button
-                                            type="button"
-                                            className="edit-btn"
-                                            onClick={() => editAdmin(admin)}
-                                        >
-                                            Edit
-                                        </button>
-
-                                    </td>
-
-                                    <td>
-
-                                        <button
-                                            type="button"
-                                            className="delete-btn"
-                                            onClick={() => removeAdmin(admin.id)}
-                                        >
-                                            Delete
-                                        </button>
-
-                                    </td>
-
-                                </tr>
-
-                            ))
-                        }
-
-                    </tbody>
-
-                </table>
-
-            </div>
-        </>
-
-    );
-
+                <td>
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeAdmin(admin.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
 }
 
 export default Admins;
