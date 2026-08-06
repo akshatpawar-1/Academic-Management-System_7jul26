@@ -16,6 +16,7 @@ Screenshots will be added after Version 1.0.
 
 - Session-Based Authentication
 - Password Hashing using bcrypt
+- Centralized Form Validation
 - Student Management
 - Semester-wise Marks Management
 - Enhanced Semester-wise Student Dashboard
@@ -174,6 +175,7 @@ Mumbai, Maharashtra, India
 - Admin Dashboard
 - Grade Calculator Utility
 - Percentage Calculator Utility
+- Centralized Form Validation
 - Reports Module
 - Admin Reports Page
 - Student Reports Page
@@ -188,4 +190,3 @@ Mumbai, Maharashtra, India
 - Dashboard Analytics
 - Email Notifications
 - UI/UX Improvements
-- Form Validations
