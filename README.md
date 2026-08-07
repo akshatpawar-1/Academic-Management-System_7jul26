@@ -29,6 +29,7 @@ Screenshots will be added after Version 1.0.
 - PDF Zoom Controls
 - PDF Download
 - Search & Filters
+- Reusable Footer & Developer Contact Links
 - Responsive User Interface
 
 ---
@@ -46,6 +47,7 @@ Screenshots will be added after Version 1.0.
 - React Router DOM
 - Axios
 - React Toastify
+- React Icons
 
 ## Backend
 
@@ -184,6 +186,7 @@ Mumbai, Maharashtra, India
 - PDF Zoom Controls
 - PDF Report Download
 - Search & Filters (Students, Marks & Admins)
+- Reusable Footer & Developer Contact Links
 
 ## Upcoming
 
