@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { login } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
 import { validateLogin } from "../utils/validation";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 function Login() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ function Login() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const hUsername = (event) => {
     setUsername(event.target.value);
@@ -72,12 +74,23 @@ function Login() {
           <br />
           <br />
 
-          <input
-            type="password"
-            placeholder="Enter Password"
-            value={password}
-            onChange={hPassword}
-          />
+          <div className="password-container">
+    		<input
+        		type={showPassword ? "text" : "password"}
+        		placeholder="Enter Password"
+       		 	value={password}
+        		onChange={hPassword}
+    		/>
+
+    		<button
+        		type="button"
+        		className="password-toggle"
+        		onClick={() => setShowPassword(!showPassword)}
+        		aria-label={showPassword ? "Hide password" : "Show password"}
+    		>
+        		{showPassword ? <FiEyeOff /> : <FiEye />}
+    		</button>
+	  </div>
 
           <br />
           <br />
