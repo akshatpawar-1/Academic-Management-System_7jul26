@@ -72,6 +72,11 @@ const login = (req, res) => {
 
                 const student = result[0];
 
+		if (!student.email_verified)
+    			return res.status(403).json({
+        			message: "Please verify your email before logging in"
+    			});
+
                 bcrypt.compare(password, student.password, (error, same) => {
 
                     if (error)

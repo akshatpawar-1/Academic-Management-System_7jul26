@@ -1,6 +1,9 @@
 const con = require("../config/db");
 const bcrypt = require("bcrypt");
 
+const crypto = require("crypto");
+const transporter = require("../config/email");
+
 const addStudent = (req, res) => {
 
     const {
@@ -12,8 +15,9 @@ const addStudent = (req, res) => {
         program
     } = req.body;
 
-    // Uploaded photo filename
     const photo = req.file ? req.file.filename : null;
+
+    const verificationToken = crypto.randomBytes(32).toString("hex");
 
     bcrypt.hash(password, 10, (error, hashedPassword) => {
 
@@ -31,9 +35,11 @@ const addStudent = (req, res) => {
                 email,
                 password,
                 program,
-                photo
+                photo,
+                email_verified,
+                verification_token
             )
-            values (?, ?, ?, ?, ?, ?, ?)
+            values (?, ?, ?, ?, ?, ?, ?, false, ?)
         `;
 
         con.query(
@@ -45,21 +51,138 @@ const addStudent = (req, res) => {
                 email,
                 hashedPassword,
                 program,
-                photo
+                photo,
+                verificationToken
             ],
             (error, result) => {
 
                 if (error)
                     return res.status(500).json({
-                        message: "Database Error"
+                        message:error.message
                     });
 
-                res.json({
-                    message: "Student Added Successfully"
+                const verificationLink =
+                    `${process.env.BACKEND_URL}/students/verify/${verificationToken}`;
+
+                const mailOptions = {
+
+                    from: process.env.EMAIL_USER,
+
+                    to: email,
+
+                    subject: "Academic Management System - Verify Your Email",
+
+                    text:
+                        `Hello ${name},\n\n` +
+                        `Your student account has been created by the administrator.\n\n` +
+                        `Please verify your email by clicking the link below:\n\n` +
+                        `${verificationLink}\n\n` +
+                        `After verification, you will be able to login.\n\n` +
+                        `Academic Management System`
+                };
+
+                transporter.sendMail(mailOptions, (error, info) => {
+
+                    if (error) {
+
+                        // Remove student if email could not be sent
+                        const deleteSql =
+                            "delete from students where id=?";
+
+                        con.query(deleteSql, [result.insertId]);
+
+                        return res.status(500).json({
+                            message: "Student Creation Failed. Verification Email Could Not Be Sent"
+                        });
+                    }
+
+                    res.json({
+                        message: "Student Added. Verification Email Sent Successfully"
+                    });
+
                 });
 
             }
         );
+
+    });
+
+};
+
+const verifyEmail = (req, res) => {
+
+    const token = req.params.token;
+
+    const sql = `
+        update students
+        set
+            email_verified = true,
+            verification_token = null
+        where verification_token=?
+    `;
+
+    con.query(sql, [token], (error, result) => {
+
+        if (error)
+            return res.status(500).send("Database Error");
+
+        if (result.affectedRows === 0)
+    		return res.status(400).send(`
+        		<div style="
+            			min-height:100vh;
+            			display:flex;
+            			justify-content:center;
+            			align-items:center;
+            			font-family:Arial, sans-serif;
+            			background:#f5f7fa;
+        		">
+            			<div style="
+                			text-align:center;
+                			background:white;
+                			padding:40px;
+                			border-radius:12px;
+                			box-shadow:0 4px 15px rgba(0,0,0,0.1);
+            			">
+                			<h2 style="color:#dc3545;">
+                    				Verification Link Invalid or Already Used
+                			</h2>
+                			<p>
+                    				Please request a new verification email.
+                			</p>
+            			</div>
+        		</div>
+    		`);
+
+	res.send(`
+    		<div style="
+        		min-height:100vh;
+        		display:flex;
+        		justify-content:center;
+        		align-items:center;
+        		font-family:Arial, sans-serif;
+        		background:#f5f7fa;
+    		">
+        		<div style="
+            			text-align:center;
+            			background:white;
+            			padding:40px;
+            			border-radius:12px;
+            			box-shadow:0 4px 15px rgba(0,0,0,0.1);
+        		">
+            			<h2 style="color:#198754;">
+                			Email Verified Successfully!
+            			</h2>
+
+            			<p>
+                			Your student account has been verified successfully.
+            			</p>
+
+            			<p>
+                			You can now login to the Academic Management System.
+            			</p>
+        		</div>
+    		</div>
+	`);
 
     });
 
@@ -160,5 +283,6 @@ module.exports = {
     addStudent,
     getStudents,
     updateStudent,
-    deleteStudent
+    deleteStudent,
+    verifyEmail
 };

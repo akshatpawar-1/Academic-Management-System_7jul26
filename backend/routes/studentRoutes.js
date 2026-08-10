@@ -12,8 +12,14 @@ const {
     addStudent,
     getStudents,
     updateStudent,
-    deleteStudent
+    deleteStudent,
+    verifyEmail
 } = require("../controllers/studentController");
+
+router.get(
+    "/verify/:token",
+    verifyEmail
+);
 
 router.post(
     "/",

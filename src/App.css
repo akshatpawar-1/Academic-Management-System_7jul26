@@ -119,6 +119,11 @@ body:has(.footer) .page{
     transition:.3s;
 }
 
+.page button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 /* Add / Update */
 
 .page button[type="submit"]{

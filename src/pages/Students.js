@@ -21,6 +21,7 @@ function Students() {
   const [program, setProgram] = useState("");
   const [photo, setPhoto] = useState(null);
   const [search, setSearch] = useState("");
+  const [isAdding, setIsAdding] = useState(false);
 
   const [students, setStudents] = useState([]);
 
@@ -103,6 +104,7 @@ function Students() {
       return;
     }
 
+    setIsAdding(true);
     try {
       const data = new FormData();
 
@@ -143,8 +145,15 @@ function Students() {
       photoRef.current.value = "";
 
       loadStudents();
+
     } catch (error) {
+
       toast.error(error.response?.data?.message || error.message);
+
+    } finally{
+
+      setIsAdding(false);
+
     }
   };
 
@@ -251,13 +260,26 @@ function Students() {
           <br />
 
           <div className="btn-row">
-            <button type="submit">
-              {editing ? "Update Student" : "Add Student"}
-            </button>
+            <button
+    		type="submit"
+    		disabled={isAdding}
+	    >
+    		{isAdding
+        		? "Adding Student..."
+        		: editing
+            			? "Update Student"
+            			: "Add Student"
+    		}
+	    </button>
 
-            <button type="button" className="reset-btn" onClick={resetForm}>
-              Reset
-            </button>
+	    <button
+    		type="button"
+    		className="reset-btn"
+    		onClick={resetForm}
+    		disabled={isAdding}
+	    >
+    		Reset
+	    </button>
           </div>
         </form>
 
