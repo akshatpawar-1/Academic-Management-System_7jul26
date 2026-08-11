@@ -9,6 +9,7 @@ import {
 import Loader from "../components/Loader";
 import { FiSearch } from "react-icons/fi";
 import { validateAdmin } from "../utils/validation";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 function Admins() {
   const [username, setUsername] = useState("");
@@ -22,6 +23,8 @@ function Admins() {
 
   const [editing, setEditing] = useState(false);
   const [id, setId] = useState(null);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const hUsername = (event) => {
     setUsername(event.target.value);
@@ -120,6 +123,7 @@ function Admins() {
       setName("");
       setEmail("");
       setPassword("");
+      setShowPassword(false);
 
       loadAdmins();
     } catch (error) {
@@ -135,6 +139,9 @@ function Admins() {
 
     setEditing(false);
     setId(null);
+
+    setShowPassword(false);
+
   };
 
   const filteredAdmins = admins.filter(
@@ -184,14 +191,24 @@ function Admins() {
 
           {!editing && (
             <>
-              <input
-                type="password"
-                placeholder="Enter Password"
-                value={password}
-                onChange={hPassword}
-              />
+              <div className="password-container">
+    		<input
+        		type={showPassword ? "text" : "password"}
+        		placeholder="Enter Password"
+       		 	value={password}
+        		onChange={hPassword}
+    		/>
 
-              <br />
+    		<button
+        		type="button"
+        		className="password-toggle"
+        		onClick={() => setShowPassword(!showPassword)}
+        		aria-label={showPassword ? "Hide password" : "Show password"}
+    		>
+        		{showPassword ? <FiEyeOff /> : <FiEye />}
+    		</button>
+	      </div>
+
               <br />
             </>
           )}

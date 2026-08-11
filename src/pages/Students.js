@@ -9,6 +9,7 @@ import {
 import Loader from "../components/Loader";
 import { FiSearch } from "react-icons/fi";
 import { validateStudent } from "../utils/validation";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 function Students() {
   const photoRef = useRef();
@@ -29,6 +30,8 @@ function Students() {
   const [id, setId] = useState(null);
 
   const [loading, setLoading] = useState(true);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const hRollno = (event) => setRollno(event.target.value);
   const hUsername = (event) => setUsername(event.target.value);
@@ -169,6 +172,7 @@ function Students() {
 
     setEditing(false);
     setId(null);
+    setShowPassword(false);
   };
 
   const filteredStudents = students.filter(
@@ -227,14 +231,24 @@ function Students() {
 
           {!editing && (
             <>
-              <input
-                type="password"
-                placeholder="Enter Password"
-                value={password}
-                onChange={hPassword}
-              />
+              <div className="password-container">
+    		<input
+        		type={showPassword ? "text" : "password"}
+        		placeholder="Enter Password"
+       		 	value={password}
+        		onChange={hPassword}
+    		/>
 
-              <br />
+    		<button
+        		type="button"
+        		className="password-toggle"
+        		onClick={() => setShowPassword(!showPassword)}
+        		aria-label={showPassword ? "Hide password" : "Show password"}
+    		>
+        		{showPassword ? <FiEyeOff /> : <FiEye />}
+    		</button>
+	      </div>
+
               <br />
             </>
           )}
