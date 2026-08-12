@@ -222,6 +222,8 @@ Mumbai, Maharashtra, India
 * PDF Report Download
 * Search & Filters (Students, Marks & Admins)
 * Reusable Footer & Developer Contact Links
+* Home Page Image Slideshow & Information Cards
+
 
 ## Upcoming
 
