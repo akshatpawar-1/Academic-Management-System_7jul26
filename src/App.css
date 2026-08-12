@@ -791,3 +791,218 @@ tr:hover{
     cursor: pointer;
     font-size: 20px;
 }
+
+/* ---------- Home / Hero Slider ---------- */
+
+.home{
+    width:100%;
+}
+
+.hero-slider{
+    position:relative;
+    width:100%;
+    height:80vh;
+    min-height:420px;
+    overflow:hidden;
+}
+
+.hero-slide-track{
+    display:flex;
+    width:100%;
+    height:100%;
+    transition:transform .6s ease;
+}
+
+.hero-slide{
+    min-width:100%;
+    height:100%;
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+.hero-overlay{
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding-top:80px;
+    background:linear-gradient(180deg,rgba(15,23,42,.75) 0%,rgba(15,23,42,.55) 50%,rgba(15,23,42,.8) 100%);
+}
+
+.hero-content{
+    max-width:650px;
+    text-align:center;
+    color:white;
+    padding:0 20px;
+}
+
+.hero-content h1{
+    font-size:42px;
+    margin-bottom:18px;
+    color:white;
+}
+
+.hero-content p{
+    font-size:18px;
+    color:#e2e8f0;
+    margin-top:0;
+    margin-bottom:28px;
+}
+
+.hero-btn{
+    padding:14px 32px;
+    border:none;
+    border-radius:8px;
+    background:#fbbf24;
+    color:#0f172a;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.hero-btn:hover{
+    background:#2563eb;
+    color:white;
+}
+
+.slider-btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:3;
+
+    width:46px;
+    height:46px;
+    border:none;
+    border-radius:50%;
+
+    background:rgba(15,23,42,.5);
+    color:white;
+    font-size:20px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.slider-btn:hover{
+    background:#2563eb;
+}
+
+.slider-btn.previous{
+    left:20px;
+}
+
+.slider-btn.next{
+    right:20px;
+}
+
+.slider-dots{
+    position:absolute;
+    bottom:22px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:3;
+
+    display:flex;
+    gap:12px;
+}
+
+.slider-dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    border:2px solid white;
+    background:transparent;
+    padding:0;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.slider-dot.active{
+    background:#fbbf24;
+    border-color:#fbbf24;
+}
+
+/* ---------- Home Info Section ---------- */
+
+.home-info{
+    text-align:center;
+    padding:70px 20px;
+}
+
+.home-info h2{
+    color:#0f172a;
+    font-size:30px;
+    margin-bottom:15px;
+}
+
+.home-info > p{
+    max-width:650px;
+    margin:0 auto;
+    color:#64748b;
+    font-size:18px;
+}
+
+.home-cards{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:25px;
+    margin-top:45px;
+}
+
+.home-card{
+    width:300px;
+    background:white;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+    padding:28px 24px;
+    text-align:center;
+    transition:.3s;
+}
+
+.home-card:hover{
+    transform:translateY(-5px);
+}
+
+.home-card h3{
+    color:#0f172a;
+    font-size:20px;
+    margin-bottom:12px;
+}
+
+.home-card p{
+    color:#64748b;
+    font-size:15px;
+    margin:0;
+}
+
+/* ---------- Home Responsive ---------- */
+
+@media(max-width:768px){
+
+    .hero-content h1{
+        font-size:28px;
+    }
+
+    .hero-content p{
+        font-size:16px;
+    }
+
+    .slider-btn{
+        width:38px;
+        height:38px;
+        font-size:16px;
+    }
+
+    .home-card{
+        width:100%;
+        max-width:320px;
+    }
+}
