@@ -6,16 +6,48 @@ import calculatePercentage from "../utils/percentageCalculator";
 import calculateGrade from "../utils/gradeCalculator";
 import Loader from "../components/Loader";
 
+import {
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    Tooltip,
+    ResponsiveContainer,
+    CartesianGrid
+} from "recharts";
+
 function StudentDashboard() {
 
     const { user } = useAuth();
 
     const [marks, setMarks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showWelcome, setShowWelcome] = useState(false);
 
     useEffect(() => {
 
         loadMarks();
+
+    }, []);
+
+    useEffect(() => {
+
+        const welcome = localStorage.getItem("showWelcome");
+
+        if (welcome === "true") {
+
+            setShowWelcome(true);
+
+            const timer = setTimeout(() => {
+
+                setShowWelcome(false);
+                localStorage.removeItem("showWelcome");
+
+            }, 5000);
+
+            return () => clearTimeout(timer);
+
+        }
 
     }, []);
 
@@ -55,6 +87,25 @@ function StudentDashboard() {
 
     });
 
+    // Percentage trend across semesters, oldest to newest
+
+    const trendData = Object.keys(semesterWiseMarks)
+        .sort((a, b) => Number(a) - Number(b))
+        .map((semester) => {
+
+            const semesterMarks = semesterWiseMarks[semester];
+
+            const marksArray = semesterMarks.map((m) => m.marks);
+
+            const percentage = calculatePercentage(marksArray);
+
+            return {
+                semester: `Sem ${semester}`,
+                percentage: Number(percentage)
+            };
+
+        });
+
     if (loading)
     	return <Loader />;
     return (
@@ -64,7 +115,19 @@ function StudentDashboard() {
 
                 <h1>Student Dashboard</h1>
 
-                <h2>Welcome, {user?.name}</h2>
+                {
+
+                    showWelcome && (
+
+                        <div className="welcome">
+
+                            <h4>Welcome, {user?.name}</h4>
+
+                        </div>
+
+                    )
+
+                }
 
                 <table border="1" cellPadding="10">
 
@@ -88,7 +151,45 @@ function StudentDashboard() {
 
                 </table>
 
-                <br />
+                <hr />
+
+                {
+
+                    trendData.length > 1 && (
+
+                        <div className="panel chart-panel">
+
+                            <h2>Percentage Trend</h2>
+
+                            <div className="chart-container">
+
+                                <ResponsiveContainer width="100%" height="100%">
+
+                                    <LineChart data={trendData}>
+
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="semester" />
+                                        <YAxis domain={[0, 100]} allowDecimals={false} />
+                                        <Tooltip />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="percentage"
+                                            stroke="#2563eb"
+                                            strokeWidth={2}
+                                            dot={{ r: 4 }}
+                                        />
+
+                                    </LineChart>
+
+                                </ResponsiveContainer>
+
+                            </div>
+
+                        </div>
+
+                    )
+
+                }
 
                 <div className="student-dashboard">
 
@@ -111,6 +212,16 @@ function StudentDashboard() {
 
                                     const grade =
                                         calculateGrade(Number(percentage));
+
+                                    // Total marks obtained vs total max marks
+                                    // (each subject is assumed to be out of 100)
+
+                                    const totalObtained = marksArray.reduce(
+                                        (sum, m) => sum + Number(m),
+                                        0
+                                    );
+
+                                    const totalMax = marksArray.length * 100;
 
                                     return (
 
@@ -140,6 +251,14 @@ function StudentDashboard() {
                                                     <h3>Grade</h3>
 
                                                     <p>{grade}</p>
+
+                                                </div>
+
+                                                <div className="summary-item">
+
+                                                    <h3>Total Marks</h3>
+
+                                                    <p>{totalObtained}/{totalMax}</p>
 
                                                 </div>
 

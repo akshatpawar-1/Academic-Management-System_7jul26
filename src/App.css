@@ -309,6 +309,42 @@ tr:hover{
     background:none;
 }
 
+/* ---------- Grade Distribution Chart ---------- */
+
+.chart-panel{
+    max-width:900px;
+    margin:30px auto 0;
+}
+
+.chart-container{
+    width:100%;
+    height:300px;
+    margin-top:15px;
+}
+
+/* ---------- College Average Threshold Colors ---------- */
+
+.stat-card .avg-good{
+    margin:0;
+    font-size:26px;
+    font-weight:bold;
+    color:#16a34a;
+}
+
+.stat-card .avg-warning{
+    margin:0;
+    font-size:26px;
+    font-weight:bold;
+    color:#d97706;
+}
+
+.stat-card .avg-critical{
+    margin:0;
+    font-size:26px;
+    font-weight:bold;
+    color:#dc2626;
+}
+
 /* ---------- Dashboard Panel Links ---------- */
 
 .panel-link{

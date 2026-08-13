@@ -3,6 +3,16 @@ import { getDashboard } from "../services/dashboardService";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Loader from "../components/Loader";
+import calculateGrade from "../utils/gradeCalculator";
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    Tooltip,
+    ResponsiveContainer,
+    CartesianGrid
+} from "recharts";
 
 function Dashboard() {
 
@@ -14,8 +24,10 @@ function Dashboard() {
     const [dashboard, setDashboard] = useState({
         students: 0,
         admins: 0,
+        collegeAverage: 0,
         recentStudent: null,
-        recentMarks: []
+        recentMarks: [],
+        studentAverages: []
     });
 
     useEffect(() => {
@@ -37,7 +49,7 @@ function Dashboard() {
                 setShowWelcome(false);
                 localStorage.removeItem("showWelcome");
 
-            }, 15000);
+            }, 5000);
 
             return () => clearTimeout(timer);
 
@@ -68,6 +80,26 @@ function Dashboard() {
 
     if (loading)
         return <Loader />;
+
+    // Turn each student's average marks into a grade,
+    // then count how many students got each grade
+
+    const gradeCounts = {};
+
+    dashboard.studentAverages.forEach((s) => {
+
+        const grade = calculateGrade(Number(s.avgMarks));
+
+        gradeCounts[grade] = (gradeCounts[grade] || 0) + 1;
+
+    });
+
+    const chartData = Object.keys(gradeCounts).map((grade) => ({
+
+        grade: grade,
+        count: gradeCounts[grade]
+
+    }));
 
     return (
 
@@ -107,9 +139,61 @@ function Dashboard() {
 
                 </div>
 
+                <div className="stat-card">
+
+                    <h2>College Average</h2>
+
+                    <p
+                        className={
+                            dashboard.collegeAverage >= 60
+                                ? "avg-good"
+                                : dashboard.collegeAverage >= 40
+                                ? "avg-warning"
+                                : "avg-critical"
+                        }
+                    >
+                        {dashboard.collegeAverage}%
+                    </p>
+
+                </div>
+
             </div>
 
             <hr className="divider" />
+
+            {/* Grade Distribution Chart */}
+
+            {
+
+                chartData.length > 0 && (
+
+                    <div className="panel chart-panel">
+
+                        <h2>Grade Distribution</h2>
+
+                        <div className="chart-container">
+
+                            <ResponsiveContainer width="100%" height="100%">
+
+                                <BarChart data={chartData}>
+
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="grade" />
+                                    <YAxis allowDecimals={false} />
+                                    <Tooltip />
+                                    <Bar dataKey="count" fill="#2563eb" />
+
+                                </BarChart>
+
+                            </ResponsiveContainer>
+
+                        </div>
+
+                    </div>
+
+                )
+
+            }
 
             <div className="dashboard-panels">
 

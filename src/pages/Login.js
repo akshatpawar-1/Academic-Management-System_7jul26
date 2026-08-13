@@ -5,51 +5,38 @@ import { login } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
 import { validateLogin } from "../utils/validation";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-
 function Login() {
   const navigate = useNavigate();
-
   const { loadUser } = useAuth();
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const hUsername = (event) => {
     setUsername(event.target.value);
   };
-
   const hPassword = (event) => {
     setPassword(event.target.value);
   };
-
   const loginUser = async (event) => {
     event.preventDefault();
-
     const error = validateLogin({ username, password });
-
     if (error) {
       toast.error(error);
       return;
     }
-
     try {
       const data = {
         username,
         password,
       };
-
       const res = await login(data);
-
       await loadUser();
-
       setUsername("");
       setPassword("");
-
+      localStorage.setItem("showWelcome", "true");
       if (res.data.user.role === "student") {
         navigate("/student-dashboard");
       } else {
-        localStorage.setItem("showWelcome", "true");
         navigate("/dashboard");
       }
     } catch (error) {
@@ -57,12 +44,10 @@ function Login() {
       else toast.error("Server Not Running");
     }
   };
-
   return (
     <>
       <div className="page">
         <h1>Login</h1>
-
         <form onSubmit={loginUser}>
           <input
             type="text"
@@ -70,10 +55,8 @@ function Login() {
             value={username}
             onChange={hUsername}
           />
-
           <br />
           <br />
-
           <div className="password-container">
     		<input
         		type={showPassword ? "text" : "password"}
@@ -81,7 +64,6 @@ function Login() {
        		 	value={password}
         		onChange={hPassword}
     		/>
-
     		<button
         		type="button"
         		className="password-toggle"
@@ -91,15 +73,12 @@ function Login() {
         		{showPassword ? <FiEyeOff /> : <FiEye />}
     		</button>
 	  </div>
-
           <br />
           <br />
-
           <button type="submit">Login</button>
         </form>
       </div>
     </>
   );
 }
-
 export default Login;
