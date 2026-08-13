@@ -25,6 +25,7 @@ Screenshots will be added after Version 1.0.
 * Semester-wise Marks Management
 * Enhanced Semester-wise Student Dashboard
 * Grade & Percentage Calculation
+* Dashboard Analytics with Charts
 * Student Profile Management
 * Student Photo Upload & Display
 * Academic Reports
@@ -46,6 +47,7 @@ Screenshots will be added after Version 1.0.
 * HTML
 * CSS
 * JavaScript
+* Recharts
 * React PDF (PDF.js)
 * jsPDF
 * React Router DOM
@@ -124,6 +126,10 @@ Students cannot log in until their email has been verified.
 * Grade Display
 * Percentage Display
 * Subject-wise Marks
+* Total Marks Summary (Student Dashboard)
+* Grade Distribution Chart (Admin Dashboard)
+* Percentage Trend Chart (Student Dashboard)
+* Timed Welcome Message on Login
 
 ## Reports Module
 
@@ -173,6 +179,7 @@ This project is being developed with a focus on:
 * Practice secure password hashing.
 * Practice clean project architecture.
 * Develop reusable React components.
+* Build data visualizations using Recharts.
 * Build an industry-ready portfolio project.
 
 ---
@@ -223,9 +230,10 @@ Mumbai, Maharashtra, India
 * Search & Filters (Students, Marks & Admins)
 * Reusable Footer & Developer Contact Links
 * Home Page Image Slideshow & Information Cards
-
+* Dashboard Analytics (Grade Distribution & Percentage Trend Charts)
+* Total Marks Summary on Student Dashboard
+* Timed Welcome Message for Admin & Student Login
 
 ## Upcoming
 
-* Dashboard Analytics
 * UI/UX Improvements
