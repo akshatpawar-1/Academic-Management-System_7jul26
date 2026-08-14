@@ -19,91 +19,112 @@ const addStudent = (req, res) => {
 
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
-    bcrypt.hash(password, 10, (error, hashedPassword) => {
+    // Check if email already exists in EITHER table
+    const checkSql = `
+        select email from users where email = ?
+        union
+        select email from students where email = ?
+    `;
+
+    con.query(checkSql, [email, email], (error, result) => {
 
         if (error)
             return res.status(500).json({
-                message: "Password Hashing Error"
+                message: "Database Error"
             });
 
-        const sql = `
-            insert into students
-            (
-                rollno,
-                username,
-                name,
-                email,
-                password,
-                program,
-                photo,
-                email_verified,
-                verification_token
-            )
-            values (?, ?, ?, ?, ?, ?, ?, false, ?)
-        `;
+        if (result.length > 0)
+            return res.status(409).json({
+                message: "Email already in use by another account"
+            });
 
-        con.query(
-            sql,
-            [
-                rollno,
-                username,
-                name,
-                email,
-                hashedPassword,
-                program,
-                photo,
-                verificationToken
-            ],
-            (error, result) => {
+        bcrypt.hash(password, 10, (error, hashedPassword) => {
 
-                if (error)
-                    return res.status(500).json({
-                        message:error.message
-                    });
-
-                const verificationLink =
-                    `${process.env.BACKEND_URL}/students/verify/${verificationToken}`;
-
-                const mailOptions = {
-
-                    from: process.env.EMAIL_USER,
-
-                    to: email,
-
-                    subject: "Academic Management System - Verify Your Email",
-
-                    text:
-                        `Hello ${name},\n\n` +
-                        `Your student account has been created by the administrator.\n\n` +
-                        `Please verify your email by clicking the link below:\n\n` +
-                        `${verificationLink}\n\n` +
-                        `After verification, you will be able to login.\n\n` +
-                        `Academic Management System`
-                };
-
-                transporter.sendMail(mailOptions, (error, info) => {
-
-                    if (error) {
-
-                        // Remove student if email could not be sent
-                        const deleteSql =
-                            "delete from students where id=?";
-
-                        con.query(deleteSql, [result.insertId]);
-
-                        return res.status(500).json({
-                            message: "Student Creation Failed. Verification Email Could Not Be Sent"
-                        });
-                    }
-
-                    res.json({
-                        message: "Student Added. Verification Email Sent Successfully"
-                    });
-
+            if (error)
+                return res.status(500).json({
+                    message: "Password Hashing Error"
                 });
 
-            }
-        );
+            const sql = `
+                insert into students
+                (
+                    rollno,
+                    username,
+                    name,
+                    email,
+                    password,
+                    program,
+                    photo,
+                    email_verified,
+                    verification_token
+                )
+                values (?, ?, ?, ?, ?, ?, ?, false, ?)
+            `;
+
+            con.query(
+                sql,
+                [
+                    rollno,
+                    username,
+                    name,
+                    email,
+                    hashedPassword,
+                    program,
+                    photo,
+                    verificationToken
+                ],
+                (error, result) => {
+
+                    if (error)
+                        return res.status(500).json({
+                            message: error.message
+                        });
+
+                    const verificationLink =
+                        `${process.env.BACKEND_URL}/students/verify/${verificationToken}`;
+
+                    const mailOptions = {
+
+                        from: process.env.EMAIL_USER,
+
+                        to: email,
+
+                        subject: "Academic Management System - Verify Your Email",
+
+                        text:
+                            `Hello ${name},\n\n` +
+                            `Your student account has been created by the administrator.\n\n` +
+                            `Please verify your email by clicking the link below:\n\n` +
+                            `${verificationLink}\n\n` +
+                            `After verification, you will be able to login.\n\n` +
+                            `Academic Management System`
+                    };
+
+                    transporter.sendMail(mailOptions, (error, info) => {
+
+                        if (error) {
+
+                            // Remove student if email could not be sent
+                            const deleteSql =
+                                "delete from students where id=?";
+
+                            con.query(deleteSql, [result.insertId]);
+
+                            return res.status(500).json({
+                                message: "Student Creation Failed. Verification Email Could Not Be Sent"
+                            });
+                        }
+
+                        res.json({
+                            message: "Student Added. Verification Email Sent Successfully"
+                        });
+
+                    });
+
+                }
+            );
+
+        });
 
     });
 
@@ -219,42 +240,63 @@ const updateStudent = (req, res) => {
 
     const photo = req.file ? req.file.filename : null;
 
-    const sql = `
-        update students
-        set
-            rollno=?,
-            username=?,
-            name=?,
-            email=?,
-            program=?,
-            photo = coalesce(?, photo)
-        where id=?
+    // Check if email is used by ANOTHER account (users, or a different student)
+    const checkSql = `
+        select email from users where email = ?
+        union
+        select email from students where email = ? and id != ?
     `;
 
-    con.query(
-        sql,
-        [
-            rollno,
-            username,
-            name,
-            email,
-            program,
-            photo,
-            id
-        ],
-        (error, result) => {
+    con.query(checkSql, [email, email, id], (error, result) => {
 
-            if (error)
-                return res.status(500).json({
-                    message: "Database Error"
-                });
-
-            res.json({
-                message: "Student Updated Successfully"
+        if (error)
+            return res.status(500).json({
+                message: "Database Error"
             });
 
-        }
-    );
+        if (result.length > 0)
+            return res.status(409).json({
+                message: "Email already in use by another account"
+            });
+
+        const sql = `
+            update students
+            set
+                rollno=?,
+                username=?,
+                name=?,
+                email=?,
+                program=?,
+                photo = coalesce(?, photo)
+            where id=?
+        `;
+
+        con.query(
+            sql,
+            [
+                rollno,
+                username,
+                name,
+                email,
+                program,
+                photo,
+                id
+            ],
+            (error, result) => {
+
+                if (error)
+                    return res.status(500).json({
+                        message: "Database Error"
+                    });
+
+                res.json({
+                    message: "Student Updated Successfully"
+                });
+
+            }
+        );
+
+    });
 
 };
 

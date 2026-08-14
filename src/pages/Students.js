@@ -10,6 +10,7 @@ import Loader from "../components/Loader";
 import { FiSearch } from "react-icons/fi";
 import { validateStudent } from "../utils/validation";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { MdVerified } from "react-icons/md";
 
 function Students() {
   const photoRef = useRef();
@@ -351,7 +352,19 @@ function Students() {
                 <td>{student.rollno}</td>
                 <td>{student.username}</td>
                 <td>{student.name}</td>
-                <td>{student.email}</td>
+                <td>
+                  {student.email}
+                  {student.email_verified ? (
+                    <MdVerified
+                      style={{
+                        color: "#16a34a",
+                        marginLeft: "6px",
+                        verticalAlign: "middle",
+                      }}
+                      title="Verified"
+                    />
+                  ) : null}
+                </td>
                 <td>{student.program}</td>
 
                 <td>

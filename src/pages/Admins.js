@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import {
   addAdmin as saveAdmin,
@@ -10,12 +10,16 @@ import Loader from "../components/Loader";
 import { FiSearch } from "react-icons/fi";
 import { validateAdmin } from "../utils/validation";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { MdVerified } from "react-icons/md";
 
 function Admins() {
+  const photoRef = useRef();
+
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [photo, setPhoto] = useState(null);
   const [search, setSearch] = useState("");
 
   const [admins, setAdmins] = useState([]);
@@ -25,6 +29,8 @@ function Admins() {
   const [id, setId] = useState(null);
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const [isAdding, setIsAdding] = useState(false);
 
   const hUsername = (event) => {
     setUsername(event.target.value);
@@ -38,6 +44,7 @@ function Admins() {
   const hPassword = (event) => {
     setPassword(event.target.value);
   };
+  const hPhoto = (event) => setPhoto(event.target.files[0]);
   const hSearch = (event) => {
     setSearch(event.target.value);
   };
@@ -64,6 +71,8 @@ function Admins() {
     setEmail(admin.email);
 
     setPassword("");
+    setPhoto(null);
+    photoRef.current.value = "";
 
     setEditing(true);
   };
@@ -98,13 +107,21 @@ function Admins() {
       return;
     }
 
+    setIsAdding(true);
     try {
-      const data = {
-        username,
-        name,
-        email,
-        password,
-      };
+      const data = new FormData();
+
+      data.append("username", username);
+      data.append("name", name);
+      data.append("email", email);
+
+      if (!editing) {
+        data.append("password", password);
+      }
+
+      if (photo) {
+        data.append("photo", photo);
+      }
 
       let res;
 
@@ -123,11 +140,15 @@ function Admins() {
       setName("");
       setEmail("");
       setPassword("");
+      setPhoto(null);
+      photoRef.current.value = "";
       setShowPassword(false);
 
       loadAdmins();
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -136,12 +157,13 @@ function Admins() {
     setName("");
     setEmail("");
     setPassword("");
+    setPhoto(null);
+    photoRef.current.value = "";
 
     setEditing(false);
     setId(null);
 
     setShowPassword(false);
-
   };
 
   const filteredAdmins = admins.filter(
@@ -213,12 +235,31 @@ function Admins() {
             </>
           )}
 
+          <input
+            ref={photoRef}
+            type="file"
+            accept="image/*"
+            onChange={hPhoto}
+          />
+
+          <br />
+          <br />
+
           <div className="btn-row">
-            <button type="submit">
-              {editing ? "Update Admin" : "Add Admin"}
+            <button type="submit" disabled={isAdding}>
+              {isAdding
+                ? "Adding Admin..."
+                : editing
+                  ? "Update Admin"
+                  : "Add Admin"}
             </button>
 
-            <button type="button" className="reset-btn" onClick={resetForm}>
+            <button
+              type="button"
+              className="reset-btn"
+              onClick={resetForm}
+              disabled={isAdding}
+            >
               Reset
             </button>
           </div>
@@ -243,6 +284,7 @@ function Admins() {
         <table border="1" cellPadding="10">
           <thead>
             <tr>
+              <th>Photo</th>
               <th>Username</th>
               <th>Name</th>
               <th>Email</th>
@@ -255,9 +297,39 @@ function Admins() {
           <tbody>
             {filteredAdmins.map((admin) => (
               <tr key={admin.id}>
+                <td>
+                  {admin.photo ? (
+                    <img
+                      src={`http://localhost:5000/uploads/${admin.photo}`}
+                      alt="Admin"
+                      width="70"
+                      height="70"
+                      style={{
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        cursor: "pointer",
+                      }}
+                    />
+                  ) : (
+                    "No Photo"
+                  )}
+                </td>
+
                 <td>{admin.username}</td>
                 <td>{admin.name}</td>
-                <td>{admin.email}</td>
+                <td>
+                  {admin.email}
+                  {admin.email_verified ? (
+                    <MdVerified
+                      style={{
+                        color: "#16a34a",
+                        marginLeft: "6px",
+                        verticalAlign: "middle",
+                      }}
+                      title="Verified"
+                    />
+                  ) : null}
+                </td>
                 <td>{admin.role}</td>
 
                 <td>
