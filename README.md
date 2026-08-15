@@ -17,17 +17,19 @@ Screenshots will be added after Version 1.0.
 * Session-Based Authentication
 * Role-Based Authorization
 * Password Hashing using bcrypt
-* Student Email Verification
+* Student & Admin Email Verification
 * Verification Email using Nodemailer & Gmail SMTP
 * One-Time Email Verification Tokens
+* Verified Email Badge in UI
 * Centralized Form Validation
 * Student Management
+* Admin Management
 * Semester-wise Marks Management
 * Enhanced Semester-wise Student Dashboard
 * Grade & Percentage Calculation
 * Dashboard Analytics with Charts
-* Student Profile Management
-* Student Photo Upload & Display
+* Student & Admin Profile Management
+* Student & Admin Photo Upload & Display
 * Academic Reports
 * PDF Report Card Generation
 * React PDF.js Report Preview
@@ -75,22 +77,24 @@ Screenshots will be added after Version 1.0.
 
 This project uses **Express Session Authentication** instead of JWT.
 
-### Student Email Verification
+### Student & Admin Email Verification
 
-When an administrator creates a student account:
+When an administrator creates a student or admin account:
 
-1. The student's password is securely hashed using bcrypt.
+1. The password is securely hashed using bcrypt.
 2. A secure verification token is generated using Node.js Crypto.
-3. The student is created with `email_verified = false`.
+3. The account is created with `email_verified = false`.
 4. A verification email is sent using Nodemailer and Gmail SMTP.
-5. The student must click the verification link.
+5. The user must click the verification link.
 6. The email is marked as verified.
 7. The verification token is removed after successful verification.
-8. The student can then log in.
+8. The user can then log in.
 
 Verification links are **one-time use**.
 
-Students cannot log in until their email has been verified.
+Unverified users cannot log in.
+
+Verified emails display a verified badge across the UI.
 
 ---
 
@@ -142,6 +146,8 @@ Students cannot log in until their email has been verified.
 ## Admin Module
 
 * Admin CRUD
+* Admin Email Verification
+* Admin Photo Upload
 * Search Admins
 
 ---
@@ -203,18 +209,18 @@ Mumbai, Maharashtra, India
 * Protected & Guest Routes
 * Admin CRUD
 * Student CRUD
-* Student Email Verification
+* Student & Admin Email Verification
 * Nodemailer Email Verification
 * Gmail SMTP Configuration
 * One-Time Verification Tokens
-* Student Login Verification Check
+* Login Verification Check
+* Verified Email Badge in UI
 * Marks CRUD
 * Semester-wise Marks Management
 * Student Login
-* Student Password Hashing
-* Student Profile Page
-* Student Photo Upload & Display
-* Student Profile Photo Management
+* Password Hashing
+* Student & Admin Profile Page
+* Student & Admin Photo Upload & Display
 * Enhanced Semester-wise Student Dashboard
 * Admin Dashboard
 * Grade Calculator Utility
