@@ -7,6 +7,7 @@ import {
   deleteAdmin,
 } from "../services/adminService";
 import Loader from "../components/Loader";
+import ConfirmDialog from "../components/ConfirmDialog";
 import { FiSearch } from "react-icons/fi";
 import { validateAdmin } from "../utils/validation";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -29,32 +30,23 @@ function Admins() {
   const [id, setId] = useState(null);
 
   const [showPassword, setShowPassword] = useState(false);
-
   const [isAdding, setIsAdding] = useState(false);
 
-  const hUsername = (event) => {
-    setUsername(event.target.value);
-  };
-  const hName = (event) => {
-    setName(event.target.value);
-  };
-  const hEmail = (event) => {
-    setEmail(event.target.value);
-  };
-  const hPassword = (event) => {
-    setPassword(event.target.value);
-  };
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [adminToDelete, setAdminToDelete] = useState(null);
+
+  const hUsername = (event) => setUsername(event.target.value);
+  const hName = (event) => setName(event.target.value);
+  const hEmail = (event) => setEmail(event.target.value);
+  const hPassword = (event) => setPassword(event.target.value);
   const hPhoto = (event) => setPhoto(event.target.files[0]);
-  const hSearch = (event) => {
-    setSearch(event.target.value);
-  };
+  const hSearch = (event) => setSearch(event.target.value);
 
   const loadAdmins = async () => {
     setLoading(true);
 
     try {
       const res = await getAdmin();
-
       setAdmins(res.data);
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
@@ -77,20 +69,32 @@ function Admins() {
     setEditing(true);
   };
 
-  const removeAdmin = async (id) => {
-    const ans = window.confirm("Are you sure you want to delete this admin?");
+  const removeAdmin = (id) => {
+    setAdminToDelete(id);
+    setShowConfirmDialog(true);
+  };
 
-    if (!ans) return;
+  const confirmDeleteAdmin = async () => {
+    setShowConfirmDialog(false);
 
     try {
-      const res = await deleteAdmin(id);
+      const res = await deleteAdmin(adminToDelete);
 
       toast.success(res.data.message);
+
+      setAdminToDelete(null);
 
       loadAdmins();
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
+
+      setAdminToDelete(null);
     }
+  };
+
+  const cancelDeleteAdmin = () => {
+    setShowConfirmDialog(false);
+    setAdminToDelete(null);
   };
 
   useEffect(() => {
@@ -100,7 +104,10 @@ function Admins() {
   const saveAdminData = async (event) => {
     event.preventDefault();
 
-    const error = validateAdmin({ username, name, email, password }, editing);
+    const error = validateAdmin(
+      { username, name, email, password },
+      editing
+    );
 
     if (error) {
       toast.error(error);
@@ -108,6 +115,7 @@ function Admins() {
     }
 
     setIsAdding(true);
+
     try {
       const data = new FormData();
 
@@ -162,7 +170,6 @@ function Admins() {
 
     setEditing(false);
     setId(null);
-
     setShowPassword(false);
   };
 
@@ -214,22 +221,24 @@ function Admins() {
           {!editing && (
             <>
               <div className="password-container">
-    		<input
-        		type={showPassword ? "text" : "password"}
-        		placeholder="Enter Password"
-       		 	value={password}
-        		onChange={hPassword}
-    		/>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter Password"
+                  value={password}
+                  onChange={hPassword}
+                />
 
-    		<button
-        		type="button"
-        		className="password-toggle"
-        		onClick={() => setShowPassword(!showPassword)}
-        		aria-label={showPassword ? "Hide password" : "Show password"}
-    		>
-        		{showPassword ? <FiEyeOff /> : <FiEye />}
-    		</button>
-	      </div>
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={
+                    showPassword ? "Hide password" : "Show password"
+                  }
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
 
               <br />
             </>
@@ -250,8 +259,8 @@ function Admins() {
               {isAdding
                 ? "Adding Admin..."
                 : editing
-                  ? "Update Admin"
-                  : "Add Admin"}
+                ? "Update Admin"
+                : "Add Admin"}
             </button>
 
             <button
@@ -317,8 +326,10 @@ function Admins() {
 
                 <td>{admin.username}</td>
                 <td>{admin.name}</td>
+
                 <td>
                   {admin.email}
+
                   {admin.email_verified ? (
                     <MdVerified
                       style={{
@@ -330,6 +341,7 @@ function Admins() {
                     />
                   ) : null}
                 </td>
+
                 <td>{admin.role}</td>
 
                 <td>
@@ -342,7 +354,7 @@ function Admins() {
                   </button>
                 </td>
 
-                <td>
+                <td className="confirm-delete-cell">
                   <button
                     type="button"
                     className="delete-btn"
@@ -350,6 +362,16 @@ function Admins() {
                   >
                     Delete
                   </button>
+
+                  {showConfirmDialog && adminToDelete === admin.id && (
+                    <ConfirmDialog
+                      show={showConfirmDialog}
+                      title="Delete Admin"
+                      message="Are you sure you want to delete this admin?"
+                      onConfirm={confirmDeleteAdmin}
+                      onCancel={cancelDeleteAdmin}
+                    />
+                  )}
                 </td>
               </tr>
             ))}

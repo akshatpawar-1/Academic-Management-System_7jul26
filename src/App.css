@@ -5,6 +5,10 @@
     font-family:Arial,sans-serif;
 }
 
+button{
+    outline:none;
+}
+
 body{
     background:#f8fafc;
 }
@@ -1041,4 +1045,133 @@ tr:hover{
         width:100%;
         max-width:320px;
     }
+}
+
+/* ---------- Confirm Dialog ---------- */
+
+.confirm-delete-cell {
+    position: relative;
+}
+
+.navbar-logout-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.navbar-logout{
+    background:none;
+    border:none;
+    color:white;
+    font-size:18px;
+    font-family:inherit;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.navbar-logout:hover{
+    color:#2563eb;
+}
+
+.confirm-dialog {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 16px);
+    transform: translateY(-50%);
+
+    width: 240px;
+
+    background: white;
+
+    padding: 14px 16px;
+
+    border-radius: 6px;
+
+    text-align: left;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+    z-index: 10000;
+}
+
+.confirm-dialog h2{
+    margin:0 0 6px 0;
+    font-size:17px;
+}
+
+.confirm-dialog p{
+    margin:0 0 12px 0;
+    font-size:14px;
+    line-height:1.4;
+    color:#475569;
+}
+
+/* Small arrow pointing left toward the trigger button */
+
+.confirm-dialog::before {
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+    left: -9px;
+    transform: translateY(-50%);
+
+    width: 0;
+    height: 0;
+
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-right: 9px solid white;
+}
+
+.navbar-logout-wrapper .confirm-dialog {
+    top: calc(100% + 16px);
+    left: 0;
+    right: auto;
+    transform: none;
+}
+
+.navbar-logout-wrapper .confirm-dialog::before {
+    top: -9px;
+    left: 20px;
+    right: auto;
+    transform: none;
+
+    border-top: none;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid white;
+}
+
+.confirm-buttons {
+    display: flex;
+
+    justify-content: flex-start;
+
+    gap: 10px;
+}
+
+.confirm-buttons button {
+    padding: 9px 20px;
+
+    border: none;
+    border-radius: 6px;
+
+    font-size: 15px;
+
+    cursor: pointer;
+}
+
+.confirm-yes {
+    background: #ef4444;
+    color: white;
+}
+
+.confirm-no {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.confirm-buttons button:hover {
+    opacity: 0.85;
 }

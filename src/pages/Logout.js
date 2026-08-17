@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 function Logout() {
 
@@ -9,55 +10,68 @@ function Logout() {
 
     const { setUser } = useAuth();
 
-    useEffect(() => {
+    const [showConfirmDialog, setShowConfirmDialog] = useState(true);
+    const [loggingOut, setLoggingOut] = useState(false);
 
-        const logoutUser = async () => {
+    const cancelLogout = () => {
 
-            const ans = window.confirm("Are you sure you want to logout?");
+        setShowConfirmDialog(false);
 
-            if (!ans) {
+        navigate("/");
 
-                navigate("/");
-                return;
+    };
 
-            }
+    const confirmLogout = async () => {
 
-            try {
+        setShowConfirmDialog(false);
+        setLoggingOut(true);
 
-                const res = await logout();
+        try {
 
-                console.log(res.data);
+            const res = await logout();
 
-                setUser(null);
+            console.log(res.data);
 
-            }
-            catch (error) {
+            setUser(null);
 
-                if (error.response)
-                    console.log(error.response.data.message);
-                else
-                    console.log(error);
+        }
+        catch (error) {
 
-            }
-            finally {
+            if (error.response)
+                console.log(error.response.data.message);
+            else
+                console.log(error);
 
-                navigate("/login", { replace: true });
+        }
+        finally {
 
-            }
+            navigate("/login", { replace: true });
 
-        };
+        }
 
-        logoutUser();
-
-    }, [navigate, setUser]);
+    };
 
     return (
 
-        <div className="page">
+        <>
 
-            <h2>Logging Out...</h2>
+            <ConfirmDialog
+                show={showConfirmDialog}
+                title="Logout"
+                message="Are you sure you want to logout?"
+                onConfirm={confirmLogout}
+                onCancel={cancelLogout}
+            />
 
-        </div>
+            <div className="page">
+
+                <h2>
+                    {loggingOut ? "Logging Out..." : "Logout"}
+                </h2>
+
+            </div>
+
+        </>
 
     );
 

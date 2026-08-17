@@ -7,6 +7,7 @@ import {
   deleteStudent,
 } from "../services/studentService";
 import Loader from "../components/Loader";
+import ConfirmDialog from "../components/ConfirmDialog";
 import { FiSearch } from "react-icons/fi";
 import { validateStudent } from "../utils/validation";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -33,6 +34,9 @@ function Students() {
   const [loading, setLoading] = useState(true);
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState(null);
 
   const hRollno = (event) => setRollno(event.target.value);
   const hUsername = (event) => setUsername(event.target.value);
@@ -77,22 +81,32 @@ function Students() {
     setEditing(true);
   };
 
-  const removeStudent = async (id) => {
-    const ans = window.confirm(
-      "Are you sure you want to delete this Student?"
-    );
+  const removeStudent = (id) => {
+    setStudentToDelete(id);
+    setShowConfirmDialog(true);
+  };
 
-    if (!ans) return;
+  const confirmDeleteStudent = async () => {
+    setShowConfirmDialog(false);
 
     try {
-      const res = await deleteStudent(id);
+      const res = await deleteStudent(studentToDelete);
 
       toast.success(res.data.message);
+
+      setStudentToDelete(null);
 
       loadStudents();
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
+
+      setStudentToDelete(null);
     }
+  };
+
+  const cancelDeleteStudent = () => {
+    setShowConfirmDialog(false);
+    setStudentToDelete(null);
   };
 
   const saveStudentData = async (event) => {
@@ -109,6 +123,7 @@ function Students() {
     }
 
     setIsAdding(true);
+
     try {
       const data = new FormData();
 
@@ -149,15 +164,10 @@ function Students() {
       photoRef.current.value = "";
 
       loadStudents();
-
     } catch (error) {
-
       toast.error(error.response?.data?.message || error.message);
-
-    } finally{
-
+    } finally {
       setIsAdding(false);
-
     }
   };
 
@@ -233,22 +243,24 @@ function Students() {
           {!editing && (
             <>
               <div className="password-container">
-    		<input
-        		type={showPassword ? "text" : "password"}
-        		placeholder="Enter Password"
-       		 	value={password}
-        		onChange={hPassword}
-    		/>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter Password"
+                  value={password}
+                  onChange={hPassword}
+                />
 
-    		<button
-        		type="button"
-        		className="password-toggle"
-        		onClick={() => setShowPassword(!showPassword)}
-        		aria-label={showPassword ? "Hide password" : "Show password"}
-    		>
-        		{showPassword ? <FiEyeOff /> : <FiEye />}
-    		</button>
-	      </div>
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={
+                    showPassword ? "Hide password" : "Show password"
+                  }
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
 
               <br />
             </>
@@ -275,26 +287,22 @@ function Students() {
           <br />
 
           <div className="btn-row">
-            <button
-    		type="submit"
-    		disabled={isAdding}
-	    >
-    		{isAdding
-        		? "Adding Student..."
-        		: editing
-            			? "Update Student"
-            			: "Add Student"
-    		}
-	    </button>
+            <button type="submit" disabled={isAdding}>
+              {isAdding
+                ? "Adding Student..."
+                : editing
+                ? "Update Student"
+                : "Add Student"}
+            </button>
 
-	    <button
-    		type="button"
-    		className="reset-btn"
-    		onClick={resetForm}
-    		disabled={isAdding}
-	    >
-    		Reset
-	    </button>
+            <button
+              type="button"
+              className="reset-btn"
+              onClick={resetForm}
+              disabled={isAdding}
+            >
+              Reset
+            </button>
           </div>
         </form>
 
@@ -352,8 +360,10 @@ function Students() {
                 <td>{student.rollno}</td>
                 <td>{student.username}</td>
                 <td>{student.name}</td>
+
                 <td>
                   {student.email}
+
                   {student.email_verified ? (
                     <MdVerified
                       style={{
@@ -365,6 +375,7 @@ function Students() {
                     />
                   ) : null}
                 </td>
+
                 <td>{student.program}</td>
 
                 <td>
@@ -377,7 +388,7 @@ function Students() {
                   </button>
                 </td>
 
-                <td>
+                <td className="confirm-delete-cell">
                   <button
                     type="button"
                     className="delete-btn"
@@ -385,6 +396,17 @@ function Students() {
                   >
                     Delete
                   </button>
+
+                  {showConfirmDialog &&
+                    studentToDelete === student.id && (
+                      <ConfirmDialog
+                        show={showConfirmDialog}
+                        title="Delete Student"
+                        message="Are you sure you want to delete this student?"
+                        onConfirm={confirmDeleteStudent}
+                        onCancel={cancelDeleteStudent}
+                      />
+                    )}
                 </td>
               </tr>
             ))}

@@ -9,6 +9,7 @@ import {
 
 import { getStudents } from "../services/studentService";
 import Loader from "../components/Loader";
+import ConfirmDialog from "../components/ConfirmDialog";
 import { FiSearch } from "react-icons/fi";
 import { validateMark } from "../utils/validation";
 
@@ -27,18 +28,25 @@ function Marks() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [markToDelete, setMarkToDelete] = useState(null);
+
   const hStudentId = (event) => {
     setStudentId(event.target.value);
   };
+
   const hSubject = (event) => {
     setSubject(event.target.value);
   };
+
   const hMarks = (event) => {
     setMarks(event.target.value);
   };
+
   const hSemester = (event) => {
     setSemester(event.target.value);
   };
+
   const hSearch = (event) => {
     setSearch(event.target.value);
   };
@@ -83,26 +91,43 @@ function Marks() {
     setEditing(true);
   };
 
-  const removeMark = async (id) => {
-    const ans = window.confirm("Are you sure you want to delete this Mark?");
+  const removeMark = (id) => {
+    setMarkToDelete(id);
+    setShowConfirmDialog(true);
+  };
 
-    if (!ans) return;
+  const confirmDeleteMark = async () => {
+    setShowConfirmDialog(false);
 
     try {
-      const res = await deleteMark(id);
+      const res = await deleteMark(markToDelete);
 
       toast.success(res.data.message);
+
+      setMarkToDelete(null);
 
       loadMarks();
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
+
+      setMarkToDelete(null);
     }
+  };
+
+  const cancelDeleteMark = () => {
+    setShowConfirmDialog(false);
+    setMarkToDelete(null);
   };
 
   const saveMarkData = async (event) => {
     event.preventDefault();
 
-    const error = validateMark({ student_id, subject, marks, semester });
+    const error = validateMark({
+      student_id,
+      subject,
+      marks,
+      semester,
+    });
 
     if (error) {
       toast.error(error);
@@ -220,7 +245,11 @@ function Marks() {
               {editing ? "Update Marks" : "Add Marks"}
             </button>
 
-            <button type="button" className="reset-btn" onClick={resetForm}>
+            <button
+              type="button"
+              className="reset-btn"
+              onClick={resetForm}
+            >
               Reset
             </button>
           </div>
@@ -274,7 +303,7 @@ function Marks() {
                   </button>
                 </td>
 
-                <td>
+                <td className="confirm-delete-cell">
                   <button
                     type="button"
                     className="delete-btn"
@@ -282,6 +311,16 @@ function Marks() {
                   >
                     Delete
                   </button>
+
+                  {showConfirmDialog && markToDelete === mark.id && (
+                    <ConfirmDialog
+                      show={showConfirmDialog}
+                      title="Delete Marks"
+                      message="Are you sure you want to delete this mark entry?"
+                      onConfirm={confirmDeleteMark}
+                      onCancel={cancelDeleteMark}
+                    />
+                  )}
                 </td>
               </tr>
             ))}
