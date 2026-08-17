@@ -242,8 +242,6 @@ Mumbai, Maharashtra, India
 
 ## Upcoming
 
-## Upcoming
-
 * UI/UX Improvements & Refinements
 * Add MIT License
 * Version 1.0 Deployment
