@@ -97,6 +97,7 @@ export const validateAdmin = ({ username, name, email, password }, editing) => {
 export const validateMark = ({ student_id, subject, marks, semester }) => {
   if (!isRequired(student_id)) return "Please select a student";
   if (!isRequired(subject)) return "Subject is required";
+  if (!isRequired(marks)) return "Please enter marks";
   if (!isValidMarks(marks)) return "Marks must be a number between 0 and 100";
   if (!isValidSemester(semester)) return "Semester must be between 1 and 8";
   return null;

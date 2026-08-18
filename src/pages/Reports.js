@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import { getStudents } from "../services/studentService";
 import { getStudentSemesterReport } from "../services/markService";
 import calculatePercentage from "../utils/percentageCalculator";
@@ -45,7 +46,7 @@ function Reports() {
       const res = await getStudents();
       setStudents(res.data);
     } catch (error) {
-      console.log(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
@@ -68,7 +69,7 @@ function Reports() {
 
   const previewReport = async () => {
     if (student === "" || semester === "") {
-      alert("Please select Student and Semester");
+      toast.error("Please select Student and Semester");
       return;
     }
 
@@ -256,7 +257,7 @@ function Reports() {
     } catch (error) {
       setLoading(false);
 
-      console.log(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
